@@ -1,6 +1,51 @@
-function ContactController($scope, $http, $modal, dataSetData, $location) {
+function ContactController($scope, $location) {
 
+    //Slides
+    $scope.$on('$viewContentLoaded', addControls());
+
+    //Maps in Home/About page 
+    if ($(".mainContentLogos").length) {
+        chartOpens("", 0, '350');
+        chartOpens("area", 1, '300');
+    } else {
+        chartOpens("spline", 0, '350');
+        chartOpens("column", 1, '300');
+    }
+
+    //Menus
+    $scope.activePath = null;
+
+    $scope.$on('$routeChangeSuccess', function () {
+        $scope.$parent.activePath = "#" + $location.path();
+    });
+
+};
+
+
+
+function dataPageController($scope, $http, $modal, dataSetData, $location, getSurveyData, getSurveyDataDrag) {
     $scope.datasets = dataSetData.query();
+
+    // DataSet 'I'
+
+
+    //Accordion Starts
+
+    $scope.displayData = function (idd) {
+        for (i in $scope.datasets) {
+            if ($scope.datasets[i].id == idd) {
+                $scope.contentHeader = $scope.datasets[i].name;
+                $scope.contentDetails = $scope.datasets[i].snippet;
+                $scope.countrry = $scope.datasets[i].cntry;
+                $scope.yyear = $scope.datasets[i].dateyear;
+            }
+        }
+        $scope.acc1open = true;
+        $scope.acc2open = true;
+        $scope.acc3open = false;
+    };
+
+
 
     // Pagination
 
@@ -35,102 +80,20 @@ function ContactController($scope, $http, $modal, dataSetData, $location) {
 
     // Pagination Ends
 
-    //Accordion Starts
 
-    $scope.displayData = function (idd) {
-        for (i in $scope.datasets) {
-            if ($scope.datasets[i].id == idd) {
-                $scope.contentHeader = $scope.datasets[i].name;
-                $scope.contentDetails = $scope.datasets[i].snippet;
-                $scope.countrry = $scope.datasets[i].cntry;
-                $scope.yyear = $scope.datasets[i].dateyear;
-            }
-        }
-        $scope.acc1open = true;
-        $scope.acc2open = true;
-        $scope.acc3open = false;
-    };
 
-    /*Some jsons for temp use*/
-    $scope.Sectors1 = [{
-        "name": "Agriculture",
-        "code": "01",
-        "selectcode": true
-    }, {
-        "name": "Education",
-        "code": "01",
-        "selectcode": true
-    }, {
-        "name": "Social",
-        "code": "01",
-        "selectcode": false
-    }, {
-        "name": "HealthCare",
-        "code": "01",
-        "selectcode": false
-    }];
 
-    $scope.Countries1 = [{
-        "name": "India",
-        "code": "02",
-        "selectcode": true
-    }, {
-        "name": "England",
-        "code": "02",
-        "selectcode": true
-    }, {
-        "name": "Canada",
-        "code": "02",
-        "selectcode": ""
-    }, {
-        "name": "France",
-        "code": "02",
-        "selectcode": ""
-    }, {
-        "name": "South Africa",
-        "code": "02",
-        "selectcode": ""
-    }, {
-        "name": "China",
-        "code": "02",
-        "selectcode": ""
-    }, {
-        "name": "Japan",
-        "code": "02",
-        "selectcode": ""
-    }];
+    // DataSet 'II'
+    //Drags Starts here
 
-    $scope.Years1 = [{
-        "name": "2010",
-        "code": "03",
-        "selectcode": ""
-    }, {
-        "name": "2011",
-        "code": "03",
-        "selectcode": true
-    }, {
-        "name": "2012",
-        "code": "03",
-        "selectcode": true
-    }, {
-        "name": "2013",
-        "code": "03",
-        "selectcode": ""
-    }, {
-        "name": "2008",
-        "code": "03",
-        "selectcode": ""
-    }, {
-        "name": "2009",
-        "code": "03",
-        "selectcode": ""
-    }, {
-        "name": "2000",
-        "code": "03",
-        "selectcode": ""
-    }];
+    var valueArra = [];
+    var cntryeArra = [];
+    var sectorArra = [];
+    var jusCheckS = [];
+    var jusCheckY = [];
+    var jusCheckC = [];
+    var timestaArra = [];
 
-    //Drags
 
     $scope.topDragList = [{
         'title': 'Sector',
@@ -148,73 +111,195 @@ function ContactController($scope, $http, $modal, dataSetData, $location) {
         'val': '10'
     }];
 
-    $scope.dragdataActions = function () {
 
-        valflag = 0;
-        lftSideListArr = [];
-        $scope.selectedContr = [];
-        $scope.selectedSects = [];
-        $scope.selectedYyrs = [];
-        angular.forEach($scope.Sectors1, function (sec) {
+    getSurveyData.query({
+        changeOrderBy: '100'
+    }, function (data) {
 
-            if (angular.isDefined(sec.selectcode) && sec.selectcode === true) {
-
-                $scope.selectedSects.push(sec.name);
-
+        for (k = 0; k < data.length; k++) {
+            data[k].sectorCode = true;
+            data[k].countryCode = true;
+            data[k].YearCode = true;
+            if (jusCheckY.indexOf(data[k].year) == -1) {
+                jusCheckY.push(data[k].year);
+                TimesArr = {
+                    "name": data[k].year,
+                    "code": "03",
+                    "selectcode": true
+                }
+                timestaArra.push(TimesArr);
             }
-
-        });
-
-        angular.forEach($scope.Countries1, function (cont) {
-
-            if (angular.isDefined(cont.selectcode) && cont.selectcode === true) {
-
-                $scope.selectedContr.push(cont.name);
-
+            if (jusCheckC.indexOf(data[k].country) == -1) {
+                jusCheckC.push(data[k].country);
+                Countryi = {
+                    "name": data[k].country,
+                    "code": "02",
+                    "selectcode": true
+                }
+                cntryeArra.push(Countryi);
             }
-
-        });
-
-        angular.forEach($scope.Years1, function (yyrs) {
-
-            if (angular.isDefined(yyrs.selectcode) && yyrs.selectcode === true) {
-
-                $scope.selectedYyrs.push(yyrs.name);
-
+            if (jusCheckS.indexOf(data[k].sector) == -1) {
+                jusCheckS.push(data[k].sector);
+                //sectorArra.push(data[k].sector);
+                Sectors = {
+                    "name": data[k].sector,
+                    "code": "01",
+                    "selectcode": true
+                }
+                sectorArra.push(Sectors);
             }
-
-        });
-
-
-        for (i = 0; i < $scope.topDragList.length; i++) {
-            lftSideListArr = $scope.topDragList[i].val;
-            valflag += parseInt(lftSideListArr);
+            valueArra.push(data[k].value);
         }
 
-        $scope.sector_count = $scope.selectedSects.length;
-        $scope.contry_count = $scope.selectedContr.length;
-        $scope.yyrss_count = $scope.selectedYyrs.length;
-        
+        $scope.Sectors1 = sectorArra;
+        $scope.Years1 = timestaArra;
+        $scope.Countries1 = cntryeArra;
 
         $(".tbleStru").createGTable({
-            SectorsArr: $scope.selectedSects,
-            CountriesArr: $scope.selectedContr,
-            YearsArr: $scope.selectedYyrs,
-            initPos: valflag
+            SectorsArr: jusCheckS,
+            CountriesArr: jusCheckC,
+            YearsArr: jusCheckY,
+            datavalueArr: valueArra,
+            datavalueNos: 1,
+            initPos: 12
         });
-        
-        
-        
-		rearrangeData();
-		$("#sideDiv .thumbnail .btn").dblclick();
 
-    };
 
-	$scope.optionsList1 = {
-        accept: function (dragEl) {
-       	   return true;
+
+
+        $scope.dragdataActions = function () {
+
+
+
+            valflag = 0;
+            lftSideListArr = [];
+            $scope.selectedContr = [];
+            $scope.selectedSects = [];
+            $scope.selectedYyrs = [];
+
+            for (i = 0; i < $scope.topDragList.length; i++) {
+                lftSideListArr = $scope.topDragList[i].val;
+                valflag += parseInt(lftSideListArr);
+            }
+
+
+            getSurveyDataDrag.query({
+                changeOrderBy: valflag
+            }, function (data) {
+
+                for (k = 0; k < data.length; k++) {
+                    data[k].sectorCode = true;
+                    data[k].countryCode = true;
+                    data[k].YearCode = true;
+                }
+
+
+
+                angular.forEach($scope.Sectors1, function (sec) {
+
+                    if (angular.isDefined(sec.selectcode) && sec.selectcode === true) {
+
+                        $scope.selectedSects.push(sec.name);
+                        $.each(data, function (j, v) {
+                            if (data[j].sector == sec.name) {
+
+                                delete data[j].sectorCode;
+                                data[j].sectorCode = "true";
+                                return;
+                            }
+                        });
+
+
+                    } else {
+                        $.each(data, function (i, v) {
+                            if (data[i].sector == sec.name) {
+                                delete data[i].sectorCode;
+                                data[i].sectorCode = "false";
+                                return;
+                            }
+                        });
+                    }
+                });
+
+                angular.forEach($scope.Countries1, function (cont) {
+
+                    if (angular.isDefined(cont.selectcode) && cont.selectcode === true) {
+
+                        $scope.selectedContr.push(cont.name);
+
+                        $.each(data, function (j, v) {
+                            if (data[j].country == cont.name) {
+
+                                delete data[j].countryCode;
+                                data[j].countryCode = "true";
+                                return;
+                            }
+                        });
+
+                    } else {
+
+                        $.each(data, function (i, v) {
+                            if (data[i].country == cont.name) {
+                                delete data[i].countryCode;
+                                data[i].countryCode = "false";
+                                return;
+                            }
+                        });
+
+                    }
+
+                });
+
+                angular.forEach($scope.Years1, function (yyrs) {
+
+                    if (angular.isDefined(yyrs.selectcode) && yyrs.selectcode === true) {
+
+                        $scope.selectedYyrs.push(yyrs.name);
+
+                        $.each(data, function (j, v) {
+                            if (data[j].year == yyrs.name) {
+                                delete data[j].YearCode;
+                                data[j].YearCode = "true";
+                                return;
+                            }
+                        });
+
+                    } else {
+
+                        $.each(data, function (i, v) {
+                            if (data[i].year == yyrs.name) {
+                                delete data[i].YearCode;
+                                data[i].YearCode = "false";
+                                return;
+                            }
+                        });
+
+                    }
+
+                });
+
+                $(".tbleStru").createGTable({
+                    SectorsArr: $scope.selectedSects,
+                    CountriesArr: $scope.selectedContr,
+                    YearsArr: $scope.selectedYyrs,
+                    datavalueArr: data,
+                    initPos: valflag
+                });
+
+            })
+
+
+            rearrangeData();
+            $("#sideDiv .thumbnail .btn").dblclick();
+
         }
-    };
+
+
+
+    });
+
+
+    $scope.acc2open = true;
 
     $scope.openModal = function () {
         $("html").animate({
@@ -224,7 +309,7 @@ function ContactController($scope, $http, $modal, dataSetData, $location) {
             templateUrl: 'partials/completeData.html',
             controller: function () {
                 openPops = setTimeout(function () {
-                    $("#tbleStru1").clone().appendTo($("#appndTable"));
+                    $("#tbleStru2 .tbleBase").clone().appendTo($("#appndTable"));
                     $(".modal").addClass("adjusModal");
                     chartOpens('', 1);
                 }, 10)
@@ -233,49 +318,19 @@ function ContactController($scope, $http, $modal, dataSetData, $location) {
         })
     };
 
+    $scope.$on('$viewContentLoaded', datapageaddControls());
 
-    $scope.acc2open = true;
-
-    $scope.$on('$viewContentLoaded', addControls());
-    
     $scope.activePath = null;
-  	
-  	$scope.$on('$routeChangeSuccess', function(){
-    	$scope.$parent.activePath ="#"+ $location.path();
-  	});
-};
+
+    $scope.$on('$routeChangeSuccess', function () {
+        $scope.$parent.activePath = "#" + $location.path();
+    });
 
 
-function addControls() {
-	
-	var t=0; // the height of the highest element (after the function runs)
-	var t_elem;  // the highest element (after the function runs)
-	$(".mainContent .clumContnt").each(function () {
-	    $this = $(this);
-	    if ( $this.innerHeight() > t ) {
-	        t_elem=this;
-	        t=$this.innerHeight();
-	    }
-	});
-	
-   	 var hghtAdju = setTimeout(function () {
-   	 	
-   	 	if ($(document).width() > 640) {
-        $(".mainContent .clumContnt").innerHeight(t);
-        }else{
-        $("#rightColum").insertAfter(".mainContent");
-        }
-       
-        $(".tbleStru").createGTable({
-            initPos: 12
-        });
-        $(".datasetList").children("li:first").find(".dataDetails").click();
-        $(".bysctor").css({
-            "margin-top": "20px",
-            "display": "none"
-        });
-   	 }, 500);
+}
 
+
+function datapageaddControls() {
 
     $("#closepop").live("click", function () {
         $(".modal-backdrop").trigger("click");
@@ -307,51 +362,58 @@ function addControls() {
     $(".browseTab").live("click", function () {
         $(".selecType").fadeOut("fast");
     });
-    
-    if($(".mainContentLogos").length){
-    chartOpens("", 0, '350');
-    chartOpens("area", 1, '300');
-    }else{
-    chartOpens("spline", 0, '350');
-    chartOpens("column", 1, '300');
-    }
-    
+
     rearrangeData();
-    slideStarts();
+
+}
+
+
+function addControls() {
+	
+	 var t = 0; // the height of the highest element (after the function runs)
+    var t_elem; // the highest element (after the function runs)
+    $(".mainContent .clumContnt").each(function () {
+        $this = $(this);
+        if ($this.innerHeight() > t) {
+            t_elem = this;
+            t = $this.innerHeight();
+        }
+    });
+
+    var hghtAdju = setTimeout(function () {
+
+        if ($(document).width() > 640) {
+            $(".mainContent .clumContnt").innerHeight(t);
+        } else {
+            $("#rightColum").insertAfter(".mainContent");
+        }
+
+        $(".datasetList").children("li:first").find(".dataDetails").click();
+        $(".bysctor").css({
+            "margin-top": "20px",
+            "display": "none"
+        });
+    }, 500);
     
-}
 
-function rearrangeData(){
-    	if($.browser.msie){
-    	setTimeout(function(){
-    	$("#sideDiv .btn:eq(0)").css("top", "10px");
-    	$("#sideDiv .btn:eq(1)").css("top", "45px");
-        $("#sideDiv .btn:eq(2)").css("top", "85px");  
-        }, 100)
-       }
-    	
-}
+    $("#slides").slidesjs({
+        height: 300,
+        play: {
+            auto: true,
+            interval: 3000
+        },
+        pagination: {
+            active: false
+        },
+        navigation: {
+            active: false
+        }
+    });
 
-function slideStarts(){
-	
-	$("#slides").slidesjs({
-			  height: 300,
-	          play: {
-	          auto: true,
-	          interval: 3000
-	          },
-	          pagination: {
-		      active: false 
-		      },
-		      navigation: {
-		      active: false
-		      }
-	  });
-	
 }
 
 function chartOpens(typeval, mode, setHeight) {
-    
+
     if (mode == 1) {
         $initId = $('.TC1');
     } else {
@@ -370,7 +432,7 @@ function chartOpens(typeval, mode, setHeight) {
         $initId.highcharts({
             chart: {
                 type: typeChart,
-				height: setHeight
+                height: setHeight
             },
             title: {
                 text: 'Yearly Countries Stats'
@@ -414,14 +476,14 @@ function chartOpens(typeval, mode, setHeight) {
 
 }
 
-var tableToExcel = (function() {
-  var uri = 'data:application/vnd.ms-excel;base64,'
-    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
-    , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
-    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
-  return function(table, name) {
-    if (!table.nodeType) table = document.getElementById(table)
-    var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
-    window.location.href = uri + base64(format(template, ctx))
-  }
-})();
+
+function rearrangeData() {
+    if ($.browser.msie) {
+        setTimeout(function () {
+            $("#sideDiv .btn:eq(0)").css("top", "10px");
+            $("#sideDiv .btn:eq(1)").css("top", "45px");
+            $("#sideDiv .btn:eq(2)").css("top", "85px");
+        }, 100)
+    }
+
+}

@@ -12,7 +12,7 @@ config(['$routeProvider', '$locationProvider',
         }).
         when('/data', {
             templateUrl: 'partials/datapage.html',
-            controller: 'ContactController'
+            controller: 'dataPageController'
         }).
         when('/inifini', {
             templateUrl: 'partials/infinitipage.html',
