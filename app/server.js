@@ -17,7 +17,7 @@ connection.connect(function () {
 });
 
 app.configure(function () {
-    app.set('port', process.env.PORT || 3000);
+    app.set('port', process.env.PORT || 3100);
     app.use(express.favicon());
     app.use(express.bodyParser());
     app.use(express.methodOverride());
