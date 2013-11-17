@@ -1,0 +1,173 @@
+<div class="mainContainer">
+  <tabset>
+    <tab heading="Search & Filters" class="tabsClass">
+      <div class="leftDataColmn">
+        <accordion close-others="false">
+          
+          <accordion-group heading="Sector"  is-open=true>
+            <ul>
+              <li data-ng-repeat="sec in Sectors1">
+                <input type="checkbox" ng-model="sec.selectcode" ng-checked="sec.selectcode" ng-change="dragdataActions()"> {{sec.name}}
+              </li>
+            </ul>
+          </accordion-group>
+          <accordion-group heading="Year"  is-open=true>
+            <ul>
+              <li data-ng-repeat="yyrs in Years1">
+                <input type="checkbox" ng-model="yyrs.selectcode" ng-checked="yyrs.selectcode" ng-change="dragdataActions()"> {{yyrs.name}}
+              </li>
+            </ul>
+          </accordion-group>
+		<div id="countryDiv">
+		<accordion-group heading="Country"  is-open=true class="dataPageLists">
+            <ul>
+              <li data-ng-repeat="contr in Countries1">
+                <input type="checkbox" ng-model="contr.selectcode" ng-checked="contr.selectcode" ng-change="dragdataActions()"> {{contr.name}}
+              </li>
+            </ul>
+          </accordion-group>
+		  </div>
+        </accordion>
+      </div>
+      <div class="midDataColmn">
+        <div class="dataPage">
+          <div class="dsetContainer">
+            <div class=".fullWidth">
+            Displaying {{recordsShown}} results
+            <input id="searchBox" type="text" name="searchstudData" ng-model="query.$" placeholder="      search">
+            <select ng-model="orderProp" id="sortBox">
+              <option value="name">Alphabetical</option>
+              <option value="dateyear">Oldest</option>
+              <option value="-dateyear">Newest</option>
+            </select>
+            
+            </div>
+            <hr/>
+            <ul class="datasetList">
+              <li ng-repeat="dataset in datasets | filter:query:strict | orderBy:orderProp | limitTo:pageSize">
+                <div ng-click="displayData(dataset.id)">
+                  <a href="" class="thumbImg">
+                  <img ng-src="{{dataset.imageUrl}}">
+                  </a>
+                  <div class="dataDetails">
+                    <b>{{dataset.cntry}} - {{dataset.dateyear}}</b>
+                    <p><b>Des:</b> {{dataset.snippet}}</p>
+                  </div>
+                  <div class="aftrdata">&nbsp;</div>
+                  <div class="clearer"></div>
+                </div>
+              </li>
+            </ul>
+            <div>			  
+              <button ng-click="prevPage(pageSize)" class="pageButtons" ng-show="shLess">Show Less</button>
+              <button ng-click="nxtPage(pageSize)" class="pageButtons" style="float:right;" ng-show="shMore">Show More</button>
+            </div>
+          </div>
+          <br/><br/>
+        </div>
+      </div>
+      <div class="rghtDataColmn">
+        <h5 class="dataHead">{{contentHeader}}</h5>
+        <div class="clearer"></div>
+        <accordion close-others="false">
+          <accordion-group heading="Preview Data" is-open="$parent.acc1open">
+            <div id="tbleStru1" class="studDetails datstble tbleStru"></div>
+            <button class="pageButtons"  ng-click="openModal()">View Complete Data</button>
+            <span style="float:right">
+              <a id="dlink"  style="display:none;"></a>
+            	<button onclick="tableToExcel('tablename', 'name', 'AshokaData.xls')">Download*.xls</button>
+              <a id="dlink"  style="display:none;"></a>
+            </span>
+          </accordion-group>
+          <accordion-group heading="About Data Set"  is-open="$parent.acc2open">
+            <b>{{countrry}} - {{yyear}}</b>
+            <p>About Data Set - {{contentDetails}}</p>
+          </accordion-group>
+          <accordion-group heading="Re-arrange Preview Data"  is-open="$parent.acc3open">
+            <div id="topDiv">
+              
+              <table class="emptyDiv"><tr><td>
+              	<div class="emptyDiv">&nbsp;</div>
+              </td></tr></table>
+              <div class="rightTbleView">
+               <p class="headTitle">Top Header</p> 
+              	<div class="thumbnail widAdj1" data-drop="true" ng-model='topDragList' data-jqyoui-options="optionsList1" jqyoui-droppable="{multiple:true, onDrop: 'dragdataActions', onDrag: 'dragdataActions'}">
+                <div class="caption">
+                  <div class="btn btn-info btn-draggable" ng-repeat="item in topDragList" ng-show="item.title" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="topDragList" jqyoui-draggable="{index: {{$index}},animate:true}">{{item.title}}</div>
+                </div>
+              </div>
+               </div>  
+              <div class="clearer"></div>
+              
+            </div>
+            <div id="sideDiv">        
+              <table style="float:left;"><tr><td width="40px">
+              	<p class="headTitle">Left Header</p> 
+              	<div class="thumbnail" data-drop="true" ng-model='leftDragList' data-jqyoui-options="optionsList1"  jqyoui-droppable="{multiple:true, onDrop: 'dragdataActions', onDrag: 'dragdataActions'}">
+                <div class="caption">
+                  <div class="btn btn-info btn-draggable" ng-repeat="item in leftDragList" ng-show="item.title" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="leftDragList" jqyoui-draggable="{index: {{$index}},animate:true}">{{item.title}}</div>
+                </div>
+              </div>
+              </td></tr></table>
+               <div class="rightTbleView">
+               <div id="tbleStru2" class="studDetails datstble tbleStru"></div>
+               </div>  
+              <div class="clearer"></div>
+            </div>
+          </accordion-group>
+        </accordion>
+      </div>
+      <div class="clearer"></div>
+    </tab>
+    <tab heading="Browse" class="tabsClass browseTab">
+      <div class="countryListBrowse">
+        <div class="sectorMenu"><a href="javascript:void(0)" id="byCntry">By Country</a><span class="fntClr"> | </span><a href="javascript:void(0)"  id="bysctor">By Sector</a></div>
+        
+          <div> 
+        <div class="listCountry" id="countryDivList">
+            <div>
+				<h2>
+				List of Countries
+				</h2>
+        
+				<input type="text" ng-model="search.country" class="search-query" style='width:460px' placeholder="Search">
+        <br/><br/>
+				<table width='100%' style='text-align:left'>
+
+				  <thead>
+				  <th></th>
+				  <th></th>
+				  </thead>
+				  <tbody>
+				   <tr ng-repeat="project in projects | filter : search | orderBy : 'country' ">
+					<td><a href="#/countries/{{project.id}}/{{project.country}}" target="_self" onclick="setCountryName()">{{project.country }}</a></td>
+					
+				  </tr>
+				  </tbody>
+				</table>
+
+            </div>
+          
+        </div>
+        
+         <div class="bysctor" id="sectorDivList">
+              <br/><br/>
+          <ul>
+            <li data-ng-repeat="sec in Sectors1"><a href="#/sectors/{{sec.name}}">{{sec.name}}</a></li>
+          </ul>
+        </div>
+      </div>
+        </tab>
+        <div class="respChart">
+          <!-- <div id="TC1"></div> -->
+          <!--
+          <div class="fntClr selecType" style="text-align: center">
+            <ul class="clearUl mapChoosefnt">
+              <li><input type="radio" name="selecttype" value="bar" checked>Bar Type</li>
+              <li><input type="radio" name="selecttype" value="line">Line Type</li>
+              <li><input type="radio" name="selecttype" value="area">Area Type</li>
+            </ul>
+          </div>-->
+        </div>
+    </tabset>
+</div>
