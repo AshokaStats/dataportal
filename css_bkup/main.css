@@ -81,6 +81,7 @@ input[type="radio"]{
 	color: #333333;
     margin: 30px 0;
     border-top: 1px solid #CCCCCC;
+
 }
 
 .footerSpan{
@@ -412,6 +413,24 @@ input[type="radio"]{
 	min-width: 92px;
 }
 
+
+#searchBox{
+	width: 94%;
+	padding-left: 3%;
+	padding-right: 3%;
+	text-align: center;
+}
+
+.halfWidth{
+width: 48%;
+padding: 1%
+}
+
+#sortBox{
+	float: right;
+}
+
+
 /* Browse Tab in Data Page*/
 
 .countryListBrowse{
@@ -420,6 +439,10 @@ input[type="radio"]{
 
 .countryListBrowse h3{
 	color: #333333;
+}
+
+#sectorDivList{
+	display: none;
 }
 
 /*Button custom style*/
@@ -445,7 +468,7 @@ button:hover, .btn-info:hover {
 
 .adjusModal{
 	width: 99.8%;
-	height: 99%;
+	min-height: 99%;
 	left: 0;
 	top: 0 !important;
 	position: absolute;
@@ -501,12 +524,12 @@ margin-top: 10px;
 .widAdj1 .caption{
 	min-width: 60px;
 }
+
 .chartpageClass{
 	float: left;
 	width: 40%;
 	margin: 1% 0 3% 5%;	
 }
-
 
 /*Infiniti Page*/
 
@@ -559,7 +582,16 @@ margin-top: 10px;
 
 .topMenuLink li a{
 	padding: 4px 10px;
+	
 }
+
+.topMenuLink li{
+	float: right;
+	margin-right: 90px;
+}
+
+
+
 
 #leftColum{
     float: none;
@@ -625,6 +657,14 @@ margin-top: 10px;
 	width: 85%;
 }
 
+.chartpageClass{
+	float: none;
+	width: 100%;
+	margin: 1% 0 3%;	
+}
+
+
+
 }
 
 
@@ -670,6 +710,7 @@ margin-top: 10px;
     width: 100%;
 }
 
+
 }
 
 @media only screen and (max-width : 250PX) {
@@ -693,6 +734,14 @@ margin-top: 10px;
 .footer{
     margin: 30px 2px 40px
 }
+
+#sortBox{
+	float: left;
+	width: 100%;
+}
+
+
+
 }
 /* Some Table design for .studDetails */
 	
@@ -769,4 +818,37 @@ table.studDetails tr:hover td {
     fill: #274B6D;
     font-family: "Lucida Grande","Lucida Sans Unicode",Verdana,Arial,Helvetica,sans-serif;
     font-size: 12px;	
+}
+
+.countryChart{
+	width: 49%;
+	float: left;
+	max-height: 380px;
+	max-width: 580px;
+	padding: 15PX;
+	padding-bottom: 30px;
+	background: #f2f2f2;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+	background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);
+}
+
+
+.fullWidth{
+	width: 100%;
+}
+
+#detailedCharts{
+	position: relative;
+	height: 100%;
+	min-height: 900px;
+}
+.detailedCharts{
+	height: 100%;
+	margin-left: 20px;
+	position: relative;
+}
+
+#mainChartHolder{
+
+	height:auto;
 }

@@ -17,6 +17,14 @@ angular.module('AshokaApp', ['ui.bootstrap', 'dataSetDataServices', 'ngDragDrop'
         when('/inifini', {
             templateUrl: 'partials/infinitipage.html',
             controller: 'infinitiPageController'
+        }).
+		when('/countries/:countryId/:countryName', {
+		templateUrl: 'partials/detail.html',
+        controller: 'ChartCtrl'
+		}).
+        when('/sectors/:sectorId', {
+        templateUrl: 'partials/detail.html',
+        controller: 'sectorChartCtrl'
         })
 }]);      
       

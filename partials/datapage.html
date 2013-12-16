@@ -32,16 +32,18 @@
       <div class="midDataColmn">
         <div class="dataPage">
           <div class="dsetContainer">
-            Search: <input type="text" name="searchstudData" ng-model="query.$"><br/>
-            Sort by:
-            <select ng-model="orderProp">
+            <div  class=".fullWidth">
+              <input id="searchBox" type="text" name="searchstudData" ng-model="query.$" placeholder="      search">
+             </div> 
+            <div class=".fullWidth">
+            <span class="halfWidth">Displaying {{recordsShown}} results</span>
+            <select ng-model="orderProp" id="sortBox" class="halfWidth">
               <option value="name">Alphabetical</option>
               <option value="dateyear">Oldest</option>
               <option value="-dateyear">Newest</option>
             </select>
-            <br/>
-            <hr/>
-            Displaying <b>{{pageSize}}</b> Datasets of <b>{{datasets.length}}</b>
+            
+            </div>
             <hr/>
             <ul class="datasetList">
               <li ng-repeat="dataset in datasets | filter:query:strict | orderBy:orderProp | limitTo:pageSize">
@@ -74,7 +76,9 @@
             <div id="tbleStru1" class="studDetails datstble tbleStru"></div>
             <button class="pageButtons"  ng-click="openModal()">View Complete Data</button>
             <span style="float:right">
-            	<button>Download*.xls</button>
+              <a id="dlink"  style="display:none;"></a>
+            	<button onclick="tableToExcel('tablename', 'name', 'AshokaData.xls')">Download*.xls</button>
+              <a id="dlink"  style="display:none;"></a>
             </span>
           </accordion-group>
           <accordion-group heading="About Data Set"  is-open="$parent.acc2open">
@@ -119,38 +123,53 @@
     </tab>
     <tab heading="Browse" class="tabsClass browseTab">
       <div class="countryListBrowse">
-        <div class="sectorMenu"><a href="" id="byCntry">By Country</a><span class="fntClr"> | </span><a href=""  id="bysctor">By Sector</a></div>
-        <div class="byCntry">
-          <div class="listCountry">
+        <div class="sectorMenu"><a href="javascript:void(0)" id="byCntry">By Country</a><span class="fntClr"> | </span><a href="javascript:void(0)"  id="bysctor">By Sector</a></div>
+        
+          <div> 
+        <div class="listCountry" id="countryDivList">
             <div>
-              <h3>A</h3>
-              <a href="">Afghanistan </a><br/><a href="">Albania </a><br/>
-              <a href="">Algeria </a><br/><a href="">American Samoa </a><br/>
-              <a href="">Andorra </a><br/><a href="">Angola </a><br/><a href="">Anguilla </a><br/>
-              <a href="">Antarctica </a><br/><a href="">Antigua And Barbuda </a><br/><a href="">Argentina </a><br/>
-              <h3>B</h3>
-              <a href="">Bahamas </a><br/><a href="">Bahrain </a><br/>
-              <a href="">Bangladesh </a><br/><a href="">Barbados </a><br/>
-              <a href="">Belarus </a><br/><a href="">Belgium </a>
+				<h2>
+				List of Countries
+				</h2>
+        
+				<input type="text" ng-model="search.country" class="search-query" style='width:460px' placeholder="Search">
+        <br/><br/>
+				<table width='100%' style='text-align:left'>
+
+				  <thead>
+				  <th></th>
+				  <th></th>
+				  </thead>
+				  <tbody>
+				   <tr ng-repeat="project in projects | filter : search | orderBy : 'country' ">
+					<td><a href="#/countries/{{project.id}}/{{project.country}}" target="_self" onclick="setCountryName()">{{project.country }}</a></td>
+					
+				  </tr>
+				  </tbody>
+				</table>
+
             </div>
-          </div>
+          
         </div>
-        <div class="bysctor">
+        
+         <div class="bysctor" id="sectorDivList">
+              <br/><br/>
           <ul>
-            <li data-ng-repeat="sec in Sectors1"><a href="">{{sec.name}}</a></li>
+            <li data-ng-repeat="sec in Sectors1"><a href="#/sectors/{{sec.name}}">{{sec.name}}</a></li>
           </ul>
         </div>
+      </div>
+        </tab>
         <div class="respChart">
-          <div id="TC1"></div>
+          <!-- <div id="TC1"></div> -->
+          <!--
           <div class="fntClr selecType" style="text-align: center">
             <ul class="clearUl mapChoosefnt">
               <li><input type="radio" name="selecttype" value="bar" checked>Bar Type</li>
               <li><input type="radio" name="selecttype" value="line">Line Type</li>
               <li><input type="radio" name="selecttype" value="area">Area Type</li>
             </ul>
-          </div>
+          </div>-->
         </div>
-      </div>
-    </tab>
-  </tabset>
+    </tabset>
 </div>
