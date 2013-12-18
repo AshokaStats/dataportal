@@ -1,4 +1,8 @@
-function ContactController($scope, $location, getSurveyData) {
+var surveyDataGlobal;
+var sectorList;
+
+
+function ContactController($scope, $location, getSurveyData, getSectors) {
     //$scope.datasets = dataSetData.query();
     $scope.acc2open = true;
     $scope.$on('$viewContentLoaded', addControls());
@@ -7,148 +11,56 @@ function ContactController($scope, $location, getSurveyData) {
         $scope.$parent.activePath = "#" + $location.path();
     });
 	
-    getSurveyData.query({
+	getSectors.query(function(data){
+		sectorList=data;
+		//alert(SurveyDataService.data);
+		for (rowIndex in data) {
+		var name=JSON.stringify(data[rowIndex].name);
+		name=name.replace(/"/g, "");
+            $("#sectorSelectBox").append("<option value="+JSON.stringify(data[rowIndex].id)+">"+name+"</option>");
+        }
+	
+	 getSurveyData.query({
         changeOrderBy: '77'
-    }, function (data) {
-        chartOpens1("topChart", "bar", "HealthCare Stat", "4", data);
-		chartOpens1("botChart", "column", "Finance Stat", "3", data);
-		 
-    });
+    }, function (surveyData) {
+	surveyDataGlobal=surveyData;
+		var name=JSON.stringify(data[0].name);
+		name=name.replace(/"/g, "");
+        chartOpens1("topChart", "bar", name+" Stats", JSON.stringify(data[0].id), surveyData);
+		//chartOpens1("botChart", "column", "Finance Stat", "3", surveyData);
+    });	
+	});
+	
+   
 };
 
-function aboutController($scope, $http, $modal, $location, dataSetData) {
-    $scope.acc2open = true;
+function aboutController($scope, $location, getSurveyData, getSectors) {
+  $scope.acc2open = true;
     $scope.$on('$viewContentLoaded', addControls());
     $scope.activePath = null;
     $scope.$on('$routeChangeSuccess', function () {
         $scope.$parent.activePath = "#" + $location.path();
     });
-    var labelsArr = '{labels : [';
-    var datasetsArr = 'datasets : [{"data":[';
-    var yearArr = new Array();
-    var countryArr = new Array();
-    var Series = " [";
-    var Category = " [";
-    dataSetData.query(function (data) {
-        //Category
-        for (rowIndex in data) {
-            if (!isPresent(data[rowIndex].year, yearArr)) {
-                yearArr.push(data[rowIndex].year);
-                Category = Category + JSON.stringify(data[rowIndex].year) + ",";
-            }
-            if (!isPresent(data[rowIndex].Country, countryArr)) {
-                countryArr.push(data[rowIndex].Country);
-            }
+	getSectors.query(function(data){
+		sectorList=data;
+		//alert(SurveyDataService.data);
+		for (rowIndex in data) {
+		var name=JSON.stringify(data[rowIndex].name);
+		name=name.replace(/"/g, "");
+            $("#sectorSelectBox").append("<option value="+JSON.stringify(data[rowIndex].id)+">"+name+"</option>");
         }
-        Category = Category.substring(0, Category.length - 1);
-        Category = Category + "]";
-        Category = Category.replace(/"/g, "");
-        //Series
-        for (countryIndex in countryArr) {
-            Series = Series + "{\"name\":" + JSON.stringify(countryArr[countryIndex]) + ", \"data\": [";
-            var data1 = "";
-            for (rowIndex in data) {
-                if (JSON.stringify(data[rowIndex].Country) == JSON.stringify(countryArr[countryIndex])) {
-                    data1 = data1 + JSON.stringify(data[rowIndex].population) + ",";
-                } else {
-                    rowIndex = rowIndex + yearArr.length;
-                }
-                data1 = data1.replace(/"/g, "");
-            }
-            Series = Series + data1;
-            Series = Series.substring(0, Series.length - 1);
-            //console.log("series is :"+Series);
-            Series = Series + "]},";
-        }
-        Series = Series.substring(0, Series.length - 1);
-        Series = Series + "]";
-        var options = {
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Worldwide Population Growth'
-            },
-            subtitle: {
-                text: 'Source: Ashoka.org'
-            },
-            xAxis: {
-                categories: JSON.parse(Category),
-                tickmarkPlacement: 'on',
-                title: {
-                    enabled: false
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Billions'
-                },
-                labels: {
-                    formatter: function () {
-                        //console.log(this.value);
-                        return this.value / 1000;
-                    }
-                }
-            },
-            tooltip: {
-                shared: true,
-                valueSuffix: 'millions'
-            },
-            plotOptions: {
-                area: {
-                    stacking: 'normal',
-                    lineColor: '#666666',
-                    lineWidth: 1,
-                    marker: {
-                        lineWidth: 1,
-                        lineColor: '#666666'
-                    }
-                }
-            },
-            series: JSON.parse(Series)
-        };
-        var optionsBar = {
-            chart: {
-                type: 'area'
-            },
-            title: {
-                text: 'Worldwide Population Growth'
-            },
-            subtitle: {
-                text: 'Source: Ashoka.org'
-            },
-            xAxis: {
-                categories: JSON.parse(Category),
-                tickmarkPlacement: 'on',
-                title: {
-                    enabled: false
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Billions'
-                },
-                labels: {
-                    formatter: function () {
-                        return this.value / 1000;
-                    }
-                }
-            },
-            tooltip: {
-                shared: true,
-                valueSuffix: 'millions'
-            },
-            plotOptions: {
-                series: {
-                    stacking: 'normal'
-                }
-            },
-            series: JSON.parse(Series)
-        };
-        //HighCharts
-        jQuery('#TestiChart1').highcharts(options);
-        jQuery('#TestiChart2').highcharts(optionsBar);
-    });
+	
+	 getSurveyData.query({
+        changeOrderBy: '77'
+    }, function (surveyData) {
+	surveyDataGlobal=surveyData;
+		var name=JSON.stringify(data[0].name);
+		name=name.replace(/"/g, "");
+        chartOpens1("topChart", "bar", name+" Stats", JSON.stringify(data[0].id), surveyData);
+		//chartOpens1("botChart", "column", "Finance Stat", "3", surveyData);
+    });	
+	});
+	
 };
 
 function dataPageController($scope, $http, $modal, $location, getSurveyData, getSurveyDataDrag, getCountryDetails, cntryDesc) {
@@ -1032,6 +944,8 @@ function chartOpens(typeval, mode, setHeight) {
 
 
 function chartOpens1(classes, chartType, chartTitle, sectorValues, dataValues) {
+//alert(chartTitle);
+//alert(sectorValues);
     var jusCheckS = [];
     var jusCheckY = [];
     var jusCheckC = [],
@@ -1068,18 +982,26 @@ function chartOpens1(classes, chartType, chartTitle, sectorValues, dataValues) {
     addNos = yrsnos = diviArray.length / jusCheckY.length;
     initval = 0;
     arr3 = [];
-    for (j = 0; j < yrsnos; j++) {
+	var count=0;
+	if(yrsnos==0){
+	count=jusCheckY.length;
+	}
+	else
+	{
+	count=yrsnos;
+	}
+    for (j = 0; j <= count; j++) {
         arr3[j] = diviArray.slice(initval, initval + addNos);
         initval = initval + addNos;
     }
     cuntryDiv = datavalNum / jusCheckC.length;
-    for (countryname in jusCheckC) {
+	for (countryname in jusCheckC) {
         addedSeries = addedSeries + "{\"name\" :\"" + jusCheckC[countryname] + "\", \"data\": [";
         addedSeries += arr3[countryname];
         addedSeries = addedSeries + "]},";
     }
     vaaal = "[" + addedSeries.slice(0, -1) + "]";
-    $initId = $('.' + classes);
+	$initId = $('.' + classes);
     var typeChart = chartType;
     if ($initId.length) {
         $initId.highcharts({
@@ -1162,3 +1084,22 @@ var tableToExcel = (function () {
 
     }
 })()
+
+
+
+$("#sectorSelectBox").live( "change", sectorBoxChange);
+
+
+function sectorBoxChange(){
+	for( rowindex in sectorList){
+//alert(rowindex+"    "+JSON.stringify(sectorList[rowindex].name)+"          "+$("#sectorSelectBox option:selected").text());
+	if(JSON.stringify(sectorList[rowindex].name).replace(/"/g, "")==$("#sectorSelectBox option:selected").text()){
+		var name=JSON.stringify(sectorList[rowindex].name).replace(/"/g, "");
+		//alert("matches "+sectorList[rowindex].name+"     "+name);
+		chartOpens1("topChart", "bar", name+" Stats", JSON.stringify(sectorList[rowindex].id), surveyDataGlobal);
+		break;
+	}
+
+}
+
+}

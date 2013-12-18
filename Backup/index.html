@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" id="ng-app" ng-app="AshokaApp" xmlns:ng="http://angularjs.org">
+  <head>
+    <title>
+      Welcome to Ashoka Stats
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/south-street/jquery-ui.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link href="js/jquery-ui.min.css" rel="stylesheet" />
+     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css" rel="stylesheet" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="js/lib/jquery-ui.min.js"></script>
+    <script src="js/lib/angular.js"></script>
+    <script src="js/lib/ui-bootstrap06.js"></script>
+    <script src="js/lib/angular-resource.js"></script>
+    <script src="js/lib/angular-dragdrop.min.js"></script>
+    <script src="js/lib/jquery_createtable.js"></script>
+    <script src="js/lib/jquery.slides.min.js"></script>	
+    <script src="js/service.js"></script>
+    <script src="js/controller.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/app.js"></script>
+	 <script src="js/highchart.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <div class="topLogo">
+      	<a href="#/">
+        <img src="images/logos/ashokaLogo.png"></a>
+        <span id="logoMart">Survey Stats</span>
+      </div>
+      <div class="topMenu">
+        <nav>
+          <ul class="topMenuLink">
+            <li ng-class="{ 'selectedMenu' :  activePath =='#/' }" >
+              <a href="#/">
+              Home
+              </a>
+            </li>
+            <li ng-class="{ 'selectedMenu' : activePath=='#/about' }" >
+              <a href="#/about/">
+              About
+              </a>
+            </li>
+            <li ng-class="{ 'selectedMenu' : activePath=='#/data' }" >
+              <a href="#data">
+              Data
+              </a>
+            </li>
+            <li ng-class="{ 'selectedMenu' : activePath=='#/inifini' }" >
+              <a href="#inifini">
+              Infiniti Data App
+              </a>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <div ng-view>
+    </div>
+    <footer>
+      <div class="footer">
+      	<span class="footerSpan">
+        All rights reserved. Ashoka
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

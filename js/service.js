@@ -59,6 +59,5 @@ return $resource('/getCountryDescription', {}, {
   });
 })
 
-
 ;
 

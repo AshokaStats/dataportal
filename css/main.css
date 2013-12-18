@@ -412,6 +412,15 @@ input[type="radio"]{
 	min-width: 92px;
 }
 
+
+#searchBox{
+	width: 87%;
+	padding-left: 3%;
+	padding-right: 3%;
+	text-align: center;
+}
+
+
 /* Browse Tab in Data Page*/
 
 .countryListBrowse{
