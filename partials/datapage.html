@@ -7,14 +7,22 @@
           <accordion-group heading="Sector"  is-open=true>
             <ul>
               <li data-ng-repeat="sec in Sectors1">
+<<<<<<< HEAD
                 <input type="checkbox" ng-model="sec.selectcode" ng-checked="sec.selectcode" ng-change="dragdataActions()"> {{sec.name}}
+=======
+                <input type="checkbox" ng-model="sec.selectcode" ng-checked="sec.selectcode" ng-change="optionClickActions()"> {{sec.name}}
+>>>>>>> Develop
               </li>
             </ul>
           </accordion-group>
           <accordion-group heading="Year"  is-open=true>
             <ul>
               <li data-ng-repeat="yyrs in Years1">
+<<<<<<< HEAD
                 <input type="checkbox" ng-model="yyrs.selectcode" ng-checked="yyrs.selectcode" ng-change="dragdataActions()"> {{yyrs.name}}
+=======
+                <input type="checkbox" ng-model="yyrs.selectcode" ng-checked="yyrs.selectcode" ng-change="optionClickActions()"> {{yyrs.name}}
+>>>>>>> Develop
               </li>
             </ul>
           </accordion-group>
@@ -22,7 +30,11 @@
 		<accordion-group heading="Country"  is-open=true class="dataPageLists">
             <ul>
               <li data-ng-repeat="contr in Countries1">
+<<<<<<< HEAD
                 <input type="checkbox" ng-model="contr.selectcode" ng-checked="contr.selectcode" ng-change="dragdataActions()"> {{contr.name}}
+=======
+                <input type="checkbox" ng-model="contr.selectcode" ng-checked="contr.selectcode" ng-change="optionClickActions()"> {{contr.name}}
+>>>>>>> Develop
               </li>
             </ul>
           </accordion-group>
@@ -32,10 +44,19 @@
       <div class="midDataColmn">
         <div class="dataPage">
           <div class="dsetContainer">
+<<<<<<< HEAD
             <div class=".fullWidth">
             Displaying {{recordsShown}} results
             <input id="searchBox" type="text" name="searchstudData" ng-model="query.$" placeholder="      search">
             <select ng-model="orderProp" id="sortBox">
+=======
+            <div  class=".fullWidth">
+              <input id="searchBox" type="text" name="searchstudData" ng-model="query.$" placeholder="search" class="srchQuery">
+             </div> 
+            <div class=".fullWidth">
+            <span class="halfWidth">Displaying {{recordsShown}} results</span>
+            <select ng-model="orderProp" id="sortBox" class="halfWidth">
+>>>>>>> Develop
               <option value="name">Alphabetical</option>
               <option value="dateyear">Oldest</option>
               <option value="-dateyear">Newest</option>
@@ -91,7 +112,11 @@
               </td></tr></table>
               <div class="rightTbleView">
                <p class="headTitle">Top Header</p> 
+<<<<<<< HEAD
               	<div class="thumbnail widAdj1" data-drop="true" ng-model='topDragList' data-jqyoui-options="optionsList1" jqyoui-droppable="{multiple:true, onDrop: 'dragdataActions', onDrag: 'dragdataActions'}">
+=======
+              	<div class="thumbnail widAdj1" data-drop="true" ng-model='topDragList' data-jqyoui-options="optionsList1" jqyoui-droppable="{multiple:true, onDrop: 'optionClickActions', onDrag: 'optionClickActions'}">
+>>>>>>> Develop
                 <div class="caption">
                   <div class="btn btn-info btn-draggable" ng-repeat="item in topDragList" ng-show="item.title" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="topDragList" jqyoui-draggable="{index: {{$index}},animate:true}">{{item.title}}</div>
                 </div>
@@ -103,7 +128,11 @@
             <div id="sideDiv">        
               <table style="float:left;"><tr><td width="40px">
               	<p class="headTitle">Left Header</p> 
+<<<<<<< HEAD
               	<div class="thumbnail" data-drop="true" ng-model='leftDragList' data-jqyoui-options="optionsList1"  jqyoui-droppable="{multiple:true, onDrop: 'dragdataActions', onDrag: 'dragdataActions'}">
+=======
+              	<div class="thumbnail" data-drop="true" ng-model='leftDragList' data-jqyoui-options="optionsList1"  jqyoui-droppable="{multiple:true, onDrop: 'optionClickActions', onDrag: 'optionClickActions'}">
+>>>>>>> Develop
                 <div class="caption">
                   <div class="btn btn-info btn-draggable" ng-repeat="item in leftDragList" ng-show="item.title" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="leftDragList" jqyoui-draggable="{index: {{$index}},animate:true}">{{item.title}}</div>
                 </div>
@@ -124,6 +153,7 @@
         <div class="sectorMenu"><a href="javascript:void(0)" id="byCntry">By Country</a><span class="fntClr"> | </span><a href="javascript:void(0)"  id="bysctor">By Sector</a></div>
         
           <div> 
+<<<<<<< HEAD
         <div class="listCountry" id="countryDivList">
             <div>
 				<h2>
@@ -145,20 +175,45 @@
 				  </tr>
 				  </tbody>
 				</table>
+=======
+
+
+        <div class="listCountry" id="countryDivList">
+				  <h2>
+				List of Countries
+				</h2>
+				<input type="text" ng-model="search.name" class="search-query srchQuery pd20" placeholder="Search">
+            <div>
+				<ul>
+            <li data-ng-repeat="project in projects | filter : search | orderBy : 'name' "><a href="#/countries/{{project.id}}/{{project.name}}">{{project.name}}</a></li>
+          </ul>
+		  
+		
+>>>>>>> Develop
 
             </div>
           
         </div>
         
          <div class="bysctor" id="sectorDivList">
+<<<<<<< HEAD
               <br/><br/>
           <ul>
             <li data-ng-repeat="sec in Sectors1"><a href="#/sectors/{{sec.name}}">{{sec.name}}</a></li>
+=======
+		 		  <h2>
+				List of Sectors
+				</h2>
+				<input type="text" ng-model="searchSector.name" class="search-query srchQuery pd20" placeholder="searchSector">
+            <ul>
+            <li data-ng-repeat="sec in Sectors1 | filter : searchSector | orderBy : 'name' "><a href="#/sectors/{{sec.name}}">{{sec.name}}</a></li>
+>>>>>>> Develop
           </ul>
         </div>
       </div>
         </tab>
         <div class="respChart">
+<<<<<<< HEAD
           <!-- <div id="TC1"></div> -->
           <!--
           <div class="fntClr selecType" style="text-align: center">
@@ -168,6 +223,9 @@
               <li><input type="radio" name="selecttype" value="area">Area Type</li>
             </ul>
           </div>-->
+=======
+          
+>>>>>>> Develop
         </div>
     </tabset>
 </div>

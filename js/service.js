@@ -52,6 +52,7 @@ return $resource('/getCountryDescription', {}, {
             isArray: true
         }
     });
+<<<<<<< HEAD
 })
 .factory('getSurveyDataDrag', function($resource){  
  return $resource('/getSurveyData/', {flag: '3'}, { 
@@ -61,4 +62,11 @@ return $resource('/getCountryDescription', {}, {
 
 
 ;
+=======
+}).factory('getSurveyDataActions', function($resource){  
+ return $resource('/getSurveyDataActions', {}, {
+    query: {method:'GET', params:{}, isArray:true}
+  });
+});
+>>>>>>> Develop
 

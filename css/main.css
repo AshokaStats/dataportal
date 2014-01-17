@@ -81,7 +81,10 @@ input[type="radio"]{
 	color: #333333;
     margin: 30px 0;
     border-top: 1px solid #CCCCCC;
+<<<<<<< HEAD
 
+=======
+>>>>>>> Develop
 }
 
 .footerSpan{
@@ -122,6 +125,22 @@ input[type="radio"]{
 
 .botChart{
 	margin-top: 20px;
+<<<<<<< HEAD
+=======
+	text-align: center;
+	color: #666666;
+    cursor: default;
+    font-family: "Lucida Grande","Lucida Sans Unicode",Verdana,Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    line-height: 14px;
+}
+
+.botChart select, .midDiv{
+	color: #666666;
+    font-family: "Lucida Grande","Lucida Sans Unicode",Verdana,Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    line-height: 14px;
+>>>>>>> Develop
 }
 
 
@@ -185,6 +204,13 @@ input[type="radio"]{
 	color: #333333;
 }
 
+<<<<<<< HEAD
+=======
+#sectorSelectBox{
+	width: 100%;
+}
+
+>>>>>>> Develop
 /*About Page*/
 
 .testimonial{
@@ -316,10 +342,39 @@ input[type="radio"]{
 	background-color: #f2f2f2;	
 }
 
+<<<<<<< HEAD
 .dsetContainer ul, .bysctor ul {
 	margin: 0px;
 }
 
+=======
+.dsetContainer ul, .bysctor ul , .listCountry ul{
+	margin: 0px;
+	list-style-type: none;
+}
+
+.bysctor{
+	display: none;
+}
+
+.countryListBrowse ul li{
+	padding: 2px;
+	font-size: 13px;
+}
+
+.srchQuery{
+	width: 30%;
+	border-radius: 3px !important;
+	padding-left: 3%;
+	padding-right: 3%;
+	text-align: center;
+ }
+ 
+ .pd20{
+	margin: 15px 0px !important;
+ }
+ 
+>>>>>>> Develop
 .dsetContainer ul li{
 	list-style: none;
 	margin: 20px 0;	
@@ -413,6 +468,15 @@ input[type="radio"]{
 	min-width: 92px;
 }
 
+<<<<<<< HEAD
+=======
+
+#searchBox{
+	width: 87% !important;
+}
+
+
+>>>>>>> Develop
 /* Browse Tab in Data Page*/
 
 .countryListBrowse{
@@ -423,10 +487,13 @@ input[type="radio"]{
 	color: #333333;
 }
 
+<<<<<<< HEAD
 #sectorDivList{
 	display: none;
 }
 
+=======
+>>>>>>> Develop
 /*Button custom style*/
 
 button, input[type="button"], input[type="submit"], .btn{
@@ -450,7 +517,11 @@ button:hover, .btn-info:hover {
 
 .adjusModal{
 	width: 99.8%;
+<<<<<<< HEAD
 	min-height: 99%;
+=======
+	height: 99%;
+>>>>>>> Develop
 	left: 0;
 	top: 0 !important;
 	position: absolute;
@@ -506,13 +577,20 @@ margin-top: 10px;
 .widAdj1 .caption{
 	min-width: 60px;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> Develop
 .chartpageClass{
 	float: left;
 	width: 40%;
 	margin: 1% 0 3% 5%;	
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Develop
 /*Infiniti Page*/
 
 .inificontainer{
@@ -537,6 +615,13 @@ margin-top: 10px;
 	padding: 10px;
 }
 
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> Develop
 /* Screens ----------- */
 
 @media only screen and (max-width : 641PX){
@@ -589,13 +674,22 @@ margin-top: 10px;
 .mainContentLogos{
     float: none;
     margin: 0px 10px;
+<<<<<<< HEAD
     width: 100% ;
+=======
+    width: 96% ;
+>>>>>>> Develop
 }
 
 #rightColum{
     float:none;
+<<<<<<< HEAD
     width: 98% ;
     margin: 0 10px;
+=======
+    width: 97% ;
+    margin: 0 2px;
+>>>>>>> Develop
 }
 
 .footer {
@@ -607,6 +701,13 @@ margin-top: 10px;
 	width: 100%;
 }
 
+<<<<<<< HEAD
+=======
+.leftsideinfi{
+	padding: 0px;
+}
+
+>>>>>>> Develop
 .leftDataColmn{
     float: none;
     width: 96%;
@@ -630,12 +731,15 @@ margin-top: 10px;
 	width: 85%;
 }
 
+<<<<<<< HEAD
 .chartpageClass{
 	float: none;
 	width: 100%;
 	margin: 1% 0 3%;	
 }
 
+=======
+>>>>>>> Develop
 }
 
 
@@ -782,6 +886,7 @@ table.studDetails tr:hover td {
     font-size: 12px;	
 }
 
+<<<<<<< HEAD
 .countryChart{
 	width: 49%;
 	float: left;
@@ -820,4 +925,8 @@ table.studDetails tr:hover td {
 #mainChartHolder{
 
 	height:auto;
+=======
+.midDiv{
+    text-align: center;
+>>>>>>> Develop
 }

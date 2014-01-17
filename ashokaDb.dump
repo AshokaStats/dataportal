@@ -1,0 +1,705 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.2.5
+-- Dumped by pg_dump version 9.3.1
+-- Started on 2013-12-13 13:44:44
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 176 (class 3079 OID 11727)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 1966 (class 0 OID 0)
+-- Dependencies: 176
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 168 (class 1259 OID 25119)
+-- Name: Timestamp; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE "Timestamp" (
+    "Year" integer,
+    "Month" character varying,
+    id integer
+);
+
+
+ALTER TABLE public."Timestamp" OWNER TO postgres;
+
+--
+-- TOC entry 169 (class 1259 OID 25125)
+-- Name: chart_data; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE chart_data (
+    "countryID" integer,
+    "sectorID" integer,
+    "timestampID" integer,
+    value integer
+);
+
+
+ALTER TABLE public.chart_data OWNER TO postgres;
+
+--
+-- TOC entry 170 (class 1259 OID 25128)
+-- Name: countries; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE countries (
+    country character varying(80) NOT NULL,
+    id integer NOT NULL
+);
+
+
+ALTER TABLE public.countries OWNER TO postgres;
+
+--
+-- TOC entry 175 (class 1259 OID 33316)
+-- Name: country_description; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE country_description (
+    id integer NOT NULL,
+    "imageUrl" character varying,
+    name character varying,
+    snippet character varying,
+    dateyear integer,
+    cntry character varying
+);
+
+
+ALTER TABLE public.country_description OWNER TO postgres;
+
+--
+-- TOC entry 172 (class 1259 OID 25136)
+-- Name: myTab; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE "myTab" (
+    "Country" character varying,
+    year character varying,
+    population character varying
+);
+
+
+ALTER TABLE public."myTab" OWNER TO postgres;
+
+--
+-- TOC entry 171 (class 1259 OID 25131)
+-- Name: ref_country_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE ref_country_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ref_country_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 1968 (class 0 OID 0)
+-- Dependencies: 171
+-- Name: ref_country_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE ref_country_id_seq OWNED BY countries.id;
+
+
+--
+-- TOC entry 173 (class 1259 OID 25142)
+-- Name: sector; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE sector (
+    id integer NOT NULL,
+    sector_name character varying(30) NOT NULL
+);
+
+
+ALTER TABLE public.sector OWNER TO postgres;
+
+--
+-- TOC entry 174 (class 1259 OID 25145)
+-- Name: sector_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE sector_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.sector_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 1969 (class 0 OID 0)
+-- Dependencies: 174
+-- Name: sector_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE sector_id_seq OWNED BY sector.id;
+
+
+--
+-- TOC entry 1837 (class 2604 OID 25133)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY countries ALTER COLUMN id SET DEFAULT nextval('ref_country_id_seq'::regclass);
+
+
+--
+-- TOC entry 1838 (class 2604 OID 25147)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY sector ALTER COLUMN id SET DEFAULT nextval('sector_id_seq'::regclass);
+
+
+--
+-- TOC entry 1951 (class 0 OID 25119)
+-- Dependencies: 168
+-- Data for Name: Timestamp; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Timestamp" ("Year", "Month", id) FROM stdin;
+2013	January	1
+2013	February	2
+2013	March	3
+2013	April	4
+2013	May	5
+2013	June	6
+2013	July	7
+2013	August	8
+2013	September	9
+2013	October	10
+2013	November	11
+2013	December	12
+2012	January	13
+2012	February	14
+2012	March	15
+2012	April	16
+2012	May	17
+2012	June	18
+2012	July	19
+2012	August	20
+2012	September	21
+2012	October	22
+2012	November	23
+2012	December	24
+2011	January	25
+2011	February	26
+2011	March	27
+2011	April	28
+2011	May	29
+2011	June	30
+2011	July	31
+2011	August	32
+2011	September	33
+2011	October	34
+2011	November	35
+2011	December	36
+2010	January	37
+2010	February	38
+2010	March	39
+2010	April	40
+2010	May	41
+2010	June	42
+2010	July	43
+2010	August	44
+2010	September	45
+2010	October	46
+2010	November	47
+2010	December	48
+\.
+
+
+--
+-- TOC entry 1952 (class 0 OID 25125)
+-- Dependencies: 169
+-- Data for Name: chart_data; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY chart_data ("countryID", "sectorID", "timestampID", value) FROM stdin;
+95	1	1	596
+95	2	1	105
+95	3	1	333
+95	4	1	177
+95	1	13	886
+95	2	13	365
+95	3	13	685
+95	4	13	250
+227	1	1	103
+227	2	1	150
+227	3	1	330
+227	4	1	187
+227	1	13	780
+227	2	13	467
+227	3	13	700
+227	4	13	300
+\.
+
+
+--
+-- TOC entry 1953 (class 0 OID 25128)
+-- Dependencies: 170
+-- Data for Name: countries; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY countries (country, id) FROM stdin;
+Angola	1
+Anguilla	2
+Antarctica	3
+Antigua and Barbuda	4
+Argentina	5
+Armenia	6
+Aruba	7
+Australia	8
+Austria	9
+Azerbaijan	10
+Bahamas	11
+Bahrain	12
+Bangladesh	13
+Barbados	14
+Belarus	15
+Belgium	16
+Belize	17
+Benin	18
+Bermuda	19
+Bhutan	20
+Bolivia, Plurinational State of	21
+Bosnia and Herzegovina	22
+Botswana	23
+Bouvet Island	24
+Brazil	25
+British Indian Ocean Territory	26
+Brunei Darussalam	27
+Bulgaria	28
+Burkina Faso	29
+Burundi	30
+Cambodia	31
+Cameroon	32
+Canada	33
+Cape Verde	34
+Cayman Islands	35
+Central African Republic	36
+Chad	37
+Chile	38
+China	39
+Christmas Island	40
+Cocos (Keeling) Islands	41
+Colombia	42
+Comoros	43
+Congo	44
+Congo, the Democratic Republic of the	45
+Cook Islands	46
+Costa Rica	47
+Côte d'Ivoire	48
+Croatia	49
+Cuba	50
+Cyprus	51
+Czech Republic	52
+Denmark	53
+Djibouti	54
+Dominica	55
+Dominican Republic	56
+Ecuador	57
+Egypt	58
+El Salvador	59
+Equatorial Guinea	60
+Eritrea	61
+Estonia	62
+Ethiopia	63
+Falkland Islands (Malvinas)	64
+Faroe Islands	65
+Fiji	66
+Finland	67
+France	68
+French Guiana	69
+French Polynesia	70
+French Southern Territories	71
+Gabon	72
+Gambia	73
+Georgia	74
+Germany	75
+Ghana	76
+Gibraltar	77
+Greece	78
+Greenland	79
+Grenada	80
+Guadeloupe	81
+Guam	82
+Guatemala	83
+Guernsey	84
+Guinea	85
+Guinea-Bissau	86
+Guyana	87
+Haiti	88
+Heard Island and McDonald Islands	89
+Holy See (Vatican City State)	90
+Honduras	91
+Hong Kong	92
+Hungary	93
+Iceland	94
+India	95
+Indonesia	96
+Iran, Islamic Republic of	97
+Iraq	98
+Ireland	99
+Isle of Man	100
+Israel	101
+Italy	102
+Jamaica	103
+Japan	104
+Jersey	105
+Jordan	106
+Kazakhstan	107
+Kenya	108
+Kiribati	109
+Korea, Democratic People's Republic of	110
+Korea, Republic of	111
+Kuwait	112
+Kyrgyzstan	113
+Lao People's Democratic Republic	114
+Latvia	115
+Lebanon	116
+Lesotho	117
+Liberia	118
+Libyan Arab Jamahiriya	119
+Liechtenstein	120
+Lithuania	121
+Luxembourg	122
+Macao	123
+Macedonia, the former Yugoslav Republic of	124
+Madagascar	125
+Malawi	126
+Malaysia	127
+Maldives	128
+Mali	129
+Malta	130
+Marshall Islands	131
+Martinique	132
+Mauritania	133
+Mauritius	134
+Mayotte	135
+Mexico	136
+Micronesia, Federated States of	137
+Moldova, Republic of	138
+Monaco	139
+Mongolia	140
+Montenegro	141
+Montserrat	142
+Morocco	143
+Mozambique	144
+Myanmar	145
+Namibia	146
+Nauru	147
+Nepal	148
+Netherlands	149
+Netherlands Antilles	150
+New Caledonia	151
+New Zealand	152
+Nicaragua	153
+Niger	154
+Nigeria	155
+Niue	156
+Norfolk Island	157
+Northern Mariana Islands	158
+Norway	159
+Oman	160
+Pakistan	161
+Palau	162
+Palestinian Territory, Occupied	163
+Panama	164
+Papua New Guinea	165
+Paraguay	166
+Peru	167
+Philippines	168
+Pitcairn	169
+Poland	170
+Portugal	171
+Puerto Rico	172
+Qatar	173
+Réunion	174
+Romania	175
+Russian Federation	176
+Rwanda	177
+Saint Barthélemy	178
+Saint Helena	179
+Saint Kitts and Nevis	180
+Saint Lucia	181
+Saint Martin (French part)	182
+Saint Pierre and Miquelon	183
+Saint Vincent and the Grenadines	184
+Samoa	185
+San Marino	186
+Sao Tome and Principe	187
+Saudi Arabia	188
+Senegal	189
+Serbia	190
+Seychelles	191
+Sierra Leone	192
+Singapore	193
+Slovakia	194
+Slovenia	195
+Solomon Islands	196
+Somalia	197
+South Africa	198
+South Georgia and the South Sandwich Islands	199
+Spain	200
+Sri Lanka	201
+Sudan	202
+Suriname	203
+Svalbard and Jan Mayen	204
+Swaziland	205
+Sweden	206
+Switzerland	207
+Syrian Arab Republic	208
+Taiwan, Province of China	209
+Tajikistan	210
+Tanzania, United Republic of	211
+Thailand	212
+Timor-Leste	213
+Togo	214
+Tokelau	215
+Tonga	216
+Trinidad and Tobago	217
+Tunisia	218
+Turkey	219
+Turkmenistan	220
+Turks and Caicos Islands	221
+Tuvalu	222
+Uganda	223
+Ukraine	224
+United Arab Emirates	225
+United Kingdom	226
+United States	227
+United States Minor Outlying Islands	228
+Uruguay	229
+Uzbekistan	230
+Vanuatu	231
+Venezuela, Bolivarian Republic of	232
+Viet Nam	233
+Virgin Islands, British	234
+Virgin Islands, U.S.	235
+Wallis and Futuna	236
+Western Sahara	237
+Yemen	238
+Zambia	239
+Zimbabwe	240
+Afghanistan	241
+Åland Islands	242
+Albania	243
+Algeria	244
+American Samoa	245
+Andorra	246
+\.
+
+
+--
+-- TOC entry 1958 (class 0 OID 33316)
+-- Dependencies: 175
+-- Data for Name: country_description; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY country_description (id, "imageUrl", name, snippet, dateyear, cntry) FROM stdin;
+0	images/noImage1.jpg	Data Set1	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.	2013	England
+1	images/noImage2.jpg	Data Set2	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.	2012	Canada
+2	images/noImage1.jpg	Data Set3	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.	1999	India
+3	images/noImage2.jpg	Data Set4	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.	2011	India
+4	images/noImage1.jpg	Data Set5	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.	2010	Russia
+5	images/noImage2.jpg	Data Set6	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.	2005	Russia
+6	images/noImage1.jpg	Data Set7	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.	2009	France
+7	images/noImage1.jpg	Data Set8	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.	2009	France
+8	images/noImage2.jpg	Data Set9	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.	2001	China
+9	images/noImage1.jpg	Data Set10	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.	2009	United Kingdom
+\.
+
+
+--
+-- TOC entry 1955 (class 0 OID 25136)
+-- Dependencies: 172
+-- Data for Name: myTab; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "myTab" ("Country", year, population) FROM stdin;
+Asia	1750	502
+Asia	1800	635
+Asia	1850	809
+Asia	1900	947
+Asia	1950	1402
+Asia	1999	3634
+Asia	2050	5268
+Africa	2050	1766
+Africa	1999	767
+Africa	1950	221
+Africa	1900	1333
+Africa	1850	111
+Africa	1800	107
+Africa	1750	106
+Europe	1750	163
+Europe	1800	203
+Europe	1850	276
+Europe	1900	408
+Europe	1950	547
+Europe	1999	729
+Europe	2050	628
+America	1750	18
+America	1850	54
+America	1900	156
+America	1950	339
+America	1999	818
+America	2050	1201
+Ocenia	2050	46
+Ocenia	1999	30
+Ocenia	1900	2
+Ocenia	1850	2
+Ocenia	1800	2
+Ocenia	1750	2
+America	1800	30
+Ocenia	1950	13
+\.
+
+
+--
+-- TOC entry 1970 (class 0 OID 0)
+-- Dependencies: 171
+-- Name: ref_country_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('ref_country_id_seq', 246, true);
+
+
+--
+-- TOC entry 1956 (class 0 OID 25142)
+-- Dependencies: 173
+-- Data for Name: sector; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY sector (id, sector_name) FROM stdin;
+1	Agriculture
+2	Education
+3	Finance
+4	Healthcare
+5	Sec5
+\.
+
+
+--
+-- TOC entry 1971 (class 0 OID 0)
+-- Dependencies: 174
+-- Name: sector_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('sector_id_seq', 1, false);
+
+
+--
+-- TOC entry 1840 (class 2606 OID 25135)
+-- Name: countries_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY countries
+    ADD CONSTRAINT countries_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1844 (class 2606 OID 33323)
+-- Name: country_description_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY country_description
+    ADD CONSTRAINT country_description_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1842 (class 2606 OID 25149)
+-- Name: sector_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY sector
+    ADD CONSTRAINT sector_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1965 (class 0 OID 0)
+-- Dependencies: 5
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- TOC entry 1967 (class 0 OID 0)
+-- Dependencies: 175
+-- Name: country_description; Type: ACL; Schema: public; Owner: postgres
+--
+
+REVOKE ALL ON TABLE country_description FROM PUBLIC;
+REVOKE ALL ON TABLE country_description FROM postgres;
+GRANT ALL ON TABLE country_description TO postgres;
+GRANT ALL ON TABLE country_description TO PUBLIC;
+
+
+--
+-- TOC entry 1505 (class 826 OID 25151)
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: -; Owner: postgres
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON SEQUENCES  FROM postgres;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres GRANT ALL ON SEQUENCES  TO postgres;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres GRANT ALL ON SEQUENCES  TO PUBLIC;
+
+
+--
+-- TOC entry 1504 (class 826 OID 25150)
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: -; Owner: postgres
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON TABLES  FROM postgres;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres GRANT ALL ON TABLES  TO postgres;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres GRANT ALL ON TABLES  TO PUBLIC;
+
+
+-- Completed on 2013-12-13 13:44:44
+
+--
+-- PostgreSQL database dump complete
+--
+

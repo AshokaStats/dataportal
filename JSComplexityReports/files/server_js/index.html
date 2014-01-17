@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome-ie7.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/jsoverson/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>server.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"></i></a></h2>
+      <p class="stat">77.50</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC"></i></h2>
+      <p class="stat">158</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty"></i></a></h2>
+      <p class="stat">23.07</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs"></i></a></h2>
+      <p class="stat">1.54</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">//Loading NPM Modules
+var express = require(&#039;express&#039;),
+    http = require(&#039;http&#039;),
+    path = require(&#039;path&#039;);
+var pg = require(&#039;pg&#039;),
+    url = require(&quot;url&quot;);
+
+//Database Queries    
+var lib = require(&#039;./db.js&#039;);
+
+//Start Express
+var app = express();
+
+//var conString = &quot;postgres://nngkaduymeakiv:zviiKPnEWEslub1JM6NCFT4Mfn@ec2-54-204-41-249.compute-1.amazonaws.com:5432/d8ghvp9f4kefd5&quot;;
+var conString = &quot;postgres://postgres:postpass@localhost:5432/ashokaNew&quot;;
+
+//Configure Node-Postgre Driver
+var connection = new pg.Client(conString);
+connection.connect(function () {
+    lib.setupDBAndTable(connection);
+});
+
+//Setting Headers Globally
+function setAllHeaders(response){
+	   response.setHeader(&#039;Access-Control-Allow-Origin&#039;, &quot;*&quot;);
+        response.setHeader(&#039;Content-Type&#039;, &quot;application/json&quot;);
+        response.setHeader(&#039;Access-Control-Allow-Headers&#039;, &quot;Origin, X-Requested-With, Content-Type, Accept&quot;);
+};
+
+
+//Configure Express
+app.configure(function () {
+    app.set(&#039;port&#039;, process.env.PORT || 3000);
+    app.use(express.favicon());
+    app.use(express.bodyParser());
+    app.use(express.methodOverride());
+    app.use(express.cookieParser(&#039;Cookies&#039;));
+    app.use(express.session());
+    app.use(app.router);
+    app.use(express.static(path.join(__dirname, &#039;/&#039;)));
+    app.use(function (req, res) {
+        res.sendfile(__dirname + &#039;/index.html&#039;);
+    });
+});
+
+app.configure(&#039;development&#039;, function () {
+    app.use(express.errorHandler());
+});
+
+//Express WebServices RESTFul
+
+app.get(&#039;/getChartData&#039;, function (request, response) {
+	lib.getChartFromDb(function (err, result) {
+       return err ? response.json(err) : response.json(result.rows);
+        setAllHeaders(response);
+    });
+});
+
+app.get(&#039;/getSurveyData&#039;, function (request, response) {
+    var fistOrder = request.query.orderby1,
+    scndOrder = request.query.changeOrderBy;
+    if (scndOrder == 12 || scndOrder == 100) {
+        fistOrder = &#039;&quot;countries&quot;.&quot;name&quot;, &quot;Timestamp&quot;.&quot;Year&quot; DESC,  &quot;sectors&quot;.&quot;name&quot;&#039;;
+    }
+    if (scndOrder == 0 || scndOrder == 33) {
+        fistOrder = &#039;&quot;sectors&quot;.&quot;name&quot;, &quot;countries&quot;.&quot;name&quot;, &quot;Timestamp&quot;.&quot;Year&quot; DESC&#039;;
+    }
+    if (scndOrder == 10) {
+        fistOrder = &#039;&quot;countries&quot;.&quot;name&quot;, &quot;sectors&quot;.&quot;name&quot;, &quot;Timestamp&quot;.&quot;Year&quot; DESC&#039;;
+    }
+    if (scndOrder == 11) {
+        fistOrder = &#039;&quot;sectors&quot;.&quot;name&quot;, &quot;Timestamp&quot;.&quot;Year&quot; DESC, &quot;countries&quot;.&quot;name&quot;&#039;;
+    }
+    if (scndOrder == 23) {
+        fistOrder = &#039;&quot;Timestamp&quot;.&quot;Year&quot; DESC,  &quot;countries&quot;.&quot;name&quot;, &quot;sectors&quot;.&quot;name&quot;&#039;;
+    }
+    if (scndOrder == 22) {
+        fistOrder = &#039;&quot;countries&quot;.&quot;name&quot;, &quot;Timestamp&quot;.&quot;Year&quot; DESC, &quot;sectors&quot;.&quot;name&quot;&#039;;
+    }
+    if (scndOrder == 21) {
+        fistOrder = &#039;&quot;sectors&quot;.&quot;name&quot;, &quot;Timestamp&quot;.&quot;Year&quot; DESC, &quot;countries&quot;.&quot;name&quot;&#039;;
+    }
+
+    if (scndOrder  ==  77) {      
+        fistOrder  =  &#039;&quot;sectors&quot;.&quot;name&quot;, &quot;countries&quot;.&quot;name&quot;, &quot;Timestamp&quot;.&quot;Year&quot; DESC&#039;;              
+    }
+
+    //Dynamic Query
+    query1 = &#039;select countries.name as country, sectors.name as sector, &quot;Timestamp&quot;.&quot;Year&quot; as year, chart_data.value as value FROM &#039;;
+    query1 += &#039;public.countries, public.chart_data, public.sectors, public.&quot;Timestamp&quot; WHERE countries.id = chart_data.&quot;countryID&quot; AND &#039;;
+    query1 += &#039;chart_data.&quot;timestampID&quot; = &quot;Timestamp&quot;.id AND sectors.id = chart_data.&quot;sectorID&quot; ORDER BY &#039;;
+    query1 += fistOrder;
+
+    lib.getSurveyDataFromDb(query1, function (err, result) {
+         return err ? response.json(err) : response.json(result.rows);
+		setAllHeaders(response);
+	});
+});
+
+app.get(&#039;/getSectors&#039;, function (request, response) {
+
+    lib.getSectorsFromDb(function (err, result) {
+        return err ? response.json(err) : response.json(result.rows);
+        setAllHeaders(response);
+	});
+});
+
+app.get(&#039;/getCountries&#039;, function (request, response) {
+    var client = new pg.Client(conString);
+    lib.getCountriesFromDb(function (err, result) {
+         return err ? response.json(err) : response.json(result.rows);
+	    setAllHeaders(response);
+    });
+});
+
+
+app.get(&#039;/getCountryDetails&#039;, function (request, response) {
+    //if id is passed, return that country
+    if (request.query.id) {
+        lib.getCountryDetailsFromDb(&#039;SELECT b.name,c.&quot;Year&quot;,a.value FROM chart_data a,sectors b,&quot;Timestamp&quot; c WHERE a.&quot;sectorID&quot;=b.id and a.&quot;timestampID&quot;=c.id and a.&quot;countryID&quot;=&#039; + request.query.id, function (err, result) {
+            return err ? response.json(err) : response.json(result.rows);
+		  setAllHeaders(response);
+	  });
+    } else { //return all countries
+        lib.getCountryDetailsFromDb(&#039;select * from countries&#039;, function (err, result) {
+             return err ? response.json(err) : response.json(result.rows);
+            setAllHeaders(response);
+	  });
+    }
+});
+
+app.get(&#039;/getSectorData&#039;, function (request, response) {
+    //if id is passed, return that country
+    lib.getSectorDataFromDb(&#039;select &quot;Timestamp&quot;.&quot;Year&quot;, sectors.name, countries.name, chart_data.&quot;value&quot; from chart_data, sectors, countries, &quot;Timestamp&quot; where countries.id=chart_data.&quot;countryID&quot; and &quot;Timestamp&quot;.&quot;id&quot;=chart_data.&quot;timestampID&quot; and chart_data.&quot;sectorID&quot;=&#039; + &#039;(select id from sectors where name=\&#039;&#039; + request.query.id + &#039;\&#039;) and sectors.id=&#039; + &#039;(select id from sectors where name=\&#039;&#039; + request.query.id + &#039;\&#039;) group by &quot;Timestamp&quot;.&quot;Year&quot;,sectors.name, countries.name, chart_data.&quot;value&quot;&#039;, function (err, result) {
+        return err ? response.json(err) : response.json(result.rows);
+	   setAllHeaders(response);
+	});
+});
+
+
+app.get(&#039;/getYears&#039;, function (request, response) {
+	lib.getYearsFromDb(function (err, result) {
+        return err ? response.json(err) : response.json(result.rows);
+	   setAllHeaders(response);
+	});
+});
+
+
+app.get(&#039;/getCountryDescription&#039;, function (request, response) {
+	lib.getCountryDescriptionFromDb(function (err, result) {
+         return err ? response.json(err) : response.json(result.rows);
+	    setAllHeaders(response);
+     });
+});
+
+//start the Server
+http.createServer(app).listen(app.get(&#039;port&#039;), function () {
+    console.log(&quot;Express server listening on port &quot; + app.get(&#039;port&#039;));
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -9,7 +9,11 @@ exports.getCountries = function (callback) {
 };
 
 exports.getCountry = function (id, callback) {
+<<<<<<< HEAD
     connection.query("SELECT b.sector_name,a.year,a.value FROM adata a,sector b WHERE a.sector_id=b.id and a.country_id="+id, callback);
+=======
+    connection.query("SELECT b.name,a.year,a.value FROM adata a,sectors b WHERE a.sectors_id=b.id and a.country_id="+id, callback);
+>>>>>>> Develop
 };
 
 
@@ -21,12 +25,29 @@ exports.getSurveyDataFromDb = function (query,callback) {
     connection.query(query, callback);
 };
 
+<<<<<<< HEAD
 exports.getSectorsFromDb = function (callback) {
     connection.query('SELECT * FROM "sector" where id in (select distinct "sectorID" from chart_data)', callback);
 };
 
 exports.getCountriesFromDb = function (callback) {
     connection.query('select * from Countries where id in (select distinct "countryID" from chart_data)', callback);
+=======
+exports.getSurveyDataActionsDb = function (query,callback) {
+    connection.query(query, callback);
+};
+
+exports.getSectorsFromDb = function (callback) {
+    connection.query('SELECT * FROM "sectors" where id in (select distinct "sectorID" from chart_data)', callback);
+};
+
+// exports.getCountriesFromDb = function (callback) {
+//     connection.query('select * from countries where id in (select distinct "countryID" from chart_data)', callback);
+// };
+
+exports.getCountriesFromDb = function (callback) {
+    connection.query('select * from countries', callback);
+>>>>>>> Develop
 };
 
 exports.getCountryDetailsFromDb = function (query,callback) {
