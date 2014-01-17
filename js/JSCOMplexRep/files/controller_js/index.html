@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome-ie7.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/jsoverson/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>controller.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"></i></a></h2>
+      <p class="stat">60.09</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC"></i></h2>
+      <p class="stat">1202</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty"></i></a></h2>
+      <p class="stat">87.84</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs"></i></a></h2>
+      <p class="stat">13.85</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">var surveyDataGlobal;
+var sectorList;
+
+
+function ContactController($scope, $location, getSurveyData, getSectors) {
+    //$scope.datasets = dataSetData.query();
+    $scope.acc2open = true;
+    $scope.$on(&#039;$viewContentLoaded&#039;, addControls());
+    $scope.activePath = null;
+    $scope.$on(&#039;$routeChangeSuccess&#039;, function () {
+        $scope.$parent.activePath = &quot;#&quot; + $location.path();
+    });
+	
+	getSectors.query(function(data){
+		sectorList=data;
+		//alert(SurveyDataService.data);
+		for (rowIndex in data) {
+		var name=JSON.stringify(data[rowIndex].name);
+		name=name.replace(/&quot;/g, &quot;&quot;);
+            $(&quot;#sectorSelectBox&quot;).append(&quot;&lt;option value=&quot;+JSON.stringify(data[rowIndex].id)+&quot;&gt;&quot;+name+&quot;&lt;/option&gt;&quot;);
+        }
+	
+	 getSurveyData.query({
+        changeOrderBy: &#039;77&#039;
+    }, function (surveyData) {
+
+       var typeofchart=checkCookie();
+	   surveyDataGlobal=surveyData;
+	   var name=JSON.stringify(data[0].name);
+	   name=name.replace(/&quot;/g, &quot;&quot;);
+       chartOpens1(&quot;topChart&quot;, typeofchart, name+&quot; Stats&quot;, JSON.stringify(data[0].id), surveyData);
+		//chartOpens1(&quot;botChart&quot;, &quot;column&quot;, &quot;Finance Stat&quot;, &quot;3&quot;, surveyData);
+       var radio = $(&quot;input:radio[name =&#039;chartType&#039;]&quot;);
+       for (i in radio)
+       {
+        if(radio[i].value==typeofchart)
+        {
+            radio[i].checked=true;
+            break;
+        }
+       }
+    });	
+	});
+	
+  
+
+
+};
+
+function aboutController($scope, $location, getSurveyData, getSectors) {
+  $scope.acc2open = true;
+    $scope.$on(&#039;$viewContentLoaded&#039;, addControls());
+    $scope.activePath = null;
+    $scope.$on(&#039;$routeChangeSuccess&#039;, function () {
+        $scope.$parent.activePath = &quot;#&quot; + $location.path();
+    });
+	getSectors.query(function(data){
+		sectorList=data;
+		//alert(SurveyDataService.data);
+		for (rowIndex in data) {
+		var name=JSON.stringify(data[rowIndex].name);
+		name=name.replace(/&quot;/g, &quot;&quot;);
+            $(&quot;#sectorSelectBox&quot;).append(&quot;&lt;option value=&quot;+JSON.stringify(data[rowIndex].id)+&quot;&gt;&quot;+name+&quot;&lt;/option&gt;&quot;);
+        }
+	
+	 getSurveyData.query({
+        changeOrderBy: &#039;77&#039;
+    }, function (surveyData) {
+        var typeofchart=checkCookie();
+	    surveyDataGlobal=surveyData;
+		var name=JSON.stringify(data[0].name);
+		name=name.replace(/&quot;/g, &quot;&quot;);
+        chartOpens1(&quot;topChart&quot;, typeofchart, name+&quot; Stats&quot;, JSON.stringify(data[0].id), surveyData);
+		//chartOpens1(&quot;botChart&quot;, &quot;column&quot;, &quot;Finance Stat&quot;, &quot;3&quot;, surveyData);
+       var radio = $(&quot;input:radio[name =&#039;chartType&#039;]&quot;);
+       for (i in radio)
+       {
+        if(radio[i].value==typeofchart)
+        {
+            radio[i].checked=true;
+            break;
+        }
+       }
+    });	
+	});
+	
+};
+
+function dataPageController($scope, $http, $modal, $location, getSurveyData, getSurveyDataDrag, getCountryDetails, cntryDesc, getSectors) {
+    //    $scope.datasets = dataSetData.query();
+    cntryDesc.query(function (data) {
+        $scope.datasets = data;
+        // Pagination
+        $scope.pageSize = 3;
+        var intialPageSize = data.length;
+        $scope.shLess = false;
+        $scope.shMore = true;
+        $scope.recordsShown = 3;
+        $scope.nxtPage = function (num) {
+            if ($scope.pageSize == $scope.intialPageSize) {
+                $scope.shMore = false;
+            } else {
+                var EndPageSize = $scope.datasets.length - num;
+                if (($scope.pageSize - intialPageSize) == intialPageSize) {
+                    $scope.shMore = false;
+                }
+                if (EndPageSize &gt; 0) {
+                    $scope.pageSize = num + 3;
+                    $scope.shLess = true;
+                }
+            }
+            if ($scope.pageSize &gt; intialPageSize) {
+                $scope.recordsShown = intialPageSize;
+            } else {
+                $scope.recordsShown = $scope.pageSize;
+            }
+        };
+        $scope.prevPage = function (num) {
+            if ($scope.pageSize &lt;= 3) {
+                $scope.shLess = false;
+            } else {
+                if (($scope.pageSize - intialPageSize) == intialPageSize) {
+                    $scope.shLess = false;
+                }
+                if (num != intialPageSize) {
+                    $scope.pageSize = num - 3;
+                    $scope.shMore = true;
+                }
+            }
+
+            if ($scope.pageSize &gt; intialPageSize) {
+                $scope.recordsShown = intialPageSize;
+            } else {
+                $scope.recordsShown = $scope.pageSize;
+            }
+
+
+        };
+        // Pagination Ends
+    });
+    getCountryDetails.query(function (data) {
+        $scope.projects = data;
+    });
+
+    getSectors.query(function(data){
+        sectorList=data;
+    });
+
+    // DataSet &#039;I&#039;
+    //Accordion Starts
+    $scope.displayData = function (idd) {
+        for (i in $scope.datasets) {
+            if ($scope.datasets[i].id == idd) {
+                $scope.contentHeader = $scope.datasets[i].name;
+                $scope.contentDetails = $scope.datasets[i].snippet;
+                $scope.countrry = $scope.datasets[i].cntry;
+                $scope.yyear = $scope.datasets[i].dateyear;
+            }
+        }
+        $scope.acc1open = true;
+        $scope.acc2open = true;
+        $scope.acc3open = false;
+    };
+    // DataSet &#039;II&#039;
+    //Drags Starts here
+    var valueArra = [];
+    var cntryeArra = [];
+    var sectorArra = [];
+    var jusCheckS = [];
+    var jusCheckY = [];
+    var jusCheckC = [];
+    var timestaArra = [];
+    $scope.topDragList = [{
+        &#039;title&#039;: &#039;Sector&#039;,
+        &#039;drag&#039;: true,
+        &#039;val&#039;: &#039;12&#039;
+    }];
+    $scope.leftDragList = [{
+        &#039;title&#039;: &#039;Country&#039;,
+        &#039;drag&#039;: true,
+        &#039;val&#039;: &#039;11&#039;
+    }, {
+        &#039;title&#039;: &#039;Year&#039;,
+        &#039;drag&#039;: true,
+        &#039;val&#039;: &#039;10&#039;
+    }];
+    getSurveyData.query({
+        changeOrderBy: &#039;100&#039;
+    }, function (data) {
+        surveyDataGlobal=data;
+        for (k = 0; k &lt; data.length; k++) {
+            data[k].sectorCode = true;
+            data[k].countryCode = true;
+            data[k].YearCode = true;
+            if (k == 0 || k == 1) {
+                if (jusCheckY.indexOf(data[k].year) == -1) {
+                    jusCheckY.push(data[k].year);
+                    TimesArr = {
+                        &quot;name&quot;: data[k].year,
+                        &quot;code&quot;: &quot;03&quot;,
+                        &quot;selectcode&quot;: true
+                    }
+                    timestaArra.push(TimesArr);
+                }
+                if (jusCheckC.indexOf(data[k].country) == -1) {
+                    jusCheckC.push(data[k].country);
+                    Countryi = {
+                        &quot;name&quot;: data[k].country,
+                        &quot;code&quot;: &quot;02&quot;,
+                        &quot;selectcode&quot;: true
+                    }
+                    cntryeArra.push(Countryi);
+                }
+                if (jusCheckS.indexOf(data[k].sector) == -1) {
+                    jusCheckS.push(data[k].sector);
+                    //sectorArra.push(data[k].sector);
+                    Sectors = {
+                        &quot;name&quot;: data[k].sector,
+                        &quot;code&quot;: &quot;01&quot;,
+                        &quot;selectcode&quot;: true
+                    }
+                    sectorArra.push(Sectors);
+                }
+            } else {
+                if (jusCheckY.indexOf(data[k].year) == -1) {
+                    jusCheckY.push(data[k].year);
+                    TimesArr = {
+                        &quot;name&quot;: data[k].year,
+                        &quot;code&quot;: &quot;03&quot;,
+                        &quot;selectcode&quot;: false
+                    }
+                    timestaArra.push(TimesArr);
+                }
+                if (jusCheckC.indexOf(data[k].country) == -1) {
+                    jusCheckC.push(data[k].country);
+                    Countryi = {
+                        &quot;name&quot;: data[k].country,
+                        &quot;code&quot;: &quot;02&quot;,
+                        &quot;selectcode&quot;: false
+                    }
+                    cntryeArra.push(Countryi);
+                }
+                if (jusCheckS.indexOf(data[k].sector) == -1) {
+                    jusCheckS.push(data[k].sector);
+                    //sectorArra.push(data[k].sector);
+                    Sectors = {
+                        &quot;name&quot;: data[k].sector,
+                        &quot;code&quot;: &quot;01&quot;,
+                        &quot;selectcode&quot;: false
+                    }
+                    sectorArra.push(Sectors);
+                }
+            }
+            valueArra.push(data[k].value);
+        }
+        $scope.Sectors1 = sectorArra;
+        $scope.Years1 = timestaArra;
+        $scope.Countries1 = cntryeArra;
+        $scope.FirstLoad = true;
+        $scope.dragdataActions = function () {
+            //console.log(&#039;dragdataActions called&#039;);
+            valflag = 0;
+            lftSideListArr = [];
+            $scope.selectedContr = [];
+            $scope.selectedSects = [];
+            $scope.selectedYyrs = [];
+            for (i = 0; i &lt; $scope.topDragList.length; i++) {
+                lftSideListArr = $scope.topDragList[i].val;
+                valflag += parseInt(lftSideListArr);
+            }
+            getSurveyDataDrag.query({
+                changeOrderBy: valflag
+            }, function (data) {
+                for (k = 0; k &lt; data.length; k++) {
+                    data[k].sectorCode = true;
+                    data[k].countryCode = true;
+                    data[k].YearCode = true;
+                }
+                angular.forEach($scope.Sectors1, function (sec) {
+                    if (angular.isDefined(sec.selectcode) &amp;&amp; sec.selectcode === true) {
+                        $scope.selectedSects.push(sec.name);
+                        $.each(data, function (j, v) {
+                            if (data[j].sector == sec.name) {
+                                delete data[j].sectorCode;
+                                data[j].sectorCode = &quot;true&quot;;
+                                return;
+                            }
+                        });
+                    } else {
+                        $.each(data, function (i, v) {
+                            if (data[i].sector == sec.name) {
+                                delete data[i].sectorCode;
+                                data[i].sectorCode = &quot;false&quot;;
+                                return;
+                            }
+                        });
+                    }
+                });
+                angular.forEach($scope.Countries1, function (cont) {
+                    if (angular.isDefined(cont.selectcode) &amp;&amp; cont.selectcode === true) {
+                        $scope.selectedContr.push(cont.name);
+                        $.each(data, function (j, v) {
+                            if (data[j].country == cont.name) {
+                                delete data[j].countryCode;
+                                data[j].countryCode = &quot;true&quot;;
+                                return;
+                            }
+                        });
+                    } else {
+                        $.each(data, function (i, v) {
+                            if (data[i].country == cont.name) {
+                                delete data[i].countryCode;
+                                data[i].countryCode = &quot;false&quot;;
+                                return;
+                            }
+                        });
+                    }
+                });
+                angular.forEach($scope.Years1, function (yyrs) {
+                    if (angular.isDefined(yyrs.selectcode) &amp;&amp; yyrs.selectcode === true) {
+                        $scope.selectedYyrs.push(yyrs.name);
+                        $.each(data, function (j, v) {
+                            if (data[j].year == yyrs.name) {
+                                delete data[j].YearCode;
+                                data[j].YearCode = &quot;true&quot;;
+                                return;
+                            }
+                        });
+                    } else {
+                        $.each(data, function (i, v) {
+                            if (data[i].year == yyrs.name) {
+                                delete data[i].YearCode;
+                                data[i].YearCode = &quot;false&quot;;
+                                return;
+                            }
+                        });
+                    }
+                });
+
+                //checking cookie
+                if ($scope.FirstLoad) {
+                    var c_name = &quot;tableType&quot;
+                    var c_value = document.cookie;
+                    var c_start = c_value.indexOf(&quot; &quot; + c_name + &quot;=&quot;);
+                    if (c_start == -1) {
+                        c_start = c_value.indexOf(c_name + &quot;=&quot;);
+                    }
+                    if (c_start == -1) {
+                        c_value = null;
+                    } else {
+                        c_start = c_value.indexOf(&quot;=&quot;, c_start) + 1;
+                        var c_end = c_value.indexOf(&quot;;&quot;, c_start);
+                        if (c_end == -1) {
+                            c_end = c_value.length;
+                        }
+                        c_value = unescape(c_value.substring(c_start, c_end));
+                    }
+                    if (c_value) {
+                        valflag = c_value;
+                       // console.log(&quot;values of cookie :&quot; + c_value);
+                    }
+                }
+                $scope.FirstLoad = false;
+                document.cookie = &quot;tableType&quot; + &quot;=&quot; + valflag;
+
+                //cookie checking done
+
+                $(&quot;.tbleStru&quot;).createGTable({
+                    SectorsArr: $scope.selectedSects,
+                    CountriesArr: $scope.selectedContr,
+                    YearsArr: $scope.selectedYyrs,
+                    datavalueArr: data,
+                    initPos: valflag
+                });
+
+
+            })
+            rearrangeData();
+            $(&quot;#sideDiv .thumbnail .btn&quot;).dblclick();
+        }
+        $scope.dragdataActions();
+    });
+    $scope.acc2open = true;
+    $scope.openModal = function () {
+        $(&quot;html&quot;).animate({
+            scrollTop: 0
+        }, 600).css(&quot;overflow-x&quot;, &quot;hidden&quot;);
+        $modal.open({
+            templateUrl: &#039;partials/completeData.html&#039;,
+            controller: function () {
+                openPops = setTimeout(function () {
+                    $(&quot;#tbleStru2 .tbleBase&quot;).clone().appendTo($(&quot;#appndTable&quot;));
+                    $(&quot;.modal&quot;).addClass(&quot;adjusModal&quot;);
+                        var data=[];
+                        for(index in surveyDataGlobal)
+                        {
+                            //console.log(isPresent(surveyDataGlobal[index].country,$scope.selectedContr)+&quot;  &quot;+isPresent(surveyDataGlobal[index].sector,$scope.selectedSects)+&quot;  &quot;+isPresent(surveyDataGlobal[index].year,$scope.selectedYyrs));
+                            //console.log(surveyDataGlobal[index].country+&quot;  &quot;+surveyDataGlobal[index].sector+&quot;  &quot;+surveyDataGlobal[index].year);
+                            
+                            if(isPresent(surveyDataGlobal[index].country,$scope.selectedContr)&amp;&amp;isPresent(surveyDataGlobal[index].sector,$scope.selectedSects)&amp;&amp;isPresent(surveyDataGlobal[index].year,$scope.selectedYyrs)){
+                              data.push(surveyDataGlobal[index]);
+                              //console.log(&quot;added :&quot;+surveyDataGlobal[index]);
+                            }
+                        }
+                        var id=&quot;&quot;;
+                        var chartnumber=1;
+                        for(index in $scope.selectedSects){
+                            for(rowIndex in sectorList){
+                            
+                                if(sectorList[rowIndex].name==$scope.selectedSects[index]){
+                                    id=sectorList[rowIndex].id;
+                                    break;
+                                }
+                            }
+                            chartOpens1(&quot;chart&quot;+chartnumber, &quot;bar&quot;, $scope.selectedSects[index]+&quot; Stat&quot;, id.toString(), data);  
+                            chartnumber++;
+                        }
+                }, 10)
+            }
+        })
+    };
+    $scope.$on(&#039;$viewContentLoaded&#039;, datapageaddControls());
+    $scope.activePath = null;
+    $scope.$on(&#039;$routeChangeSuccess&#039;, function () {
+    $scope.$parent.activePath = &quot;#&quot; + $location.path();
+    });
+}
+
+function filterSurveyData(){
+    var data=[];
+    for(index in surveyDataGlobal)
+    {
+        if(isPresent(surveyDataGlobal[index].country,$scope.selectedContr)&amp;&amp;isPresent(surveyDataGlobal[index].sector,$scope.selectedSects)&amp;&amp;isPresent(surveyDataGlobal[index].year,$scope.selectedYyrs)){
+          data.append(surveyDataGlobal[index]);
+        }
+    }
+
+}
+
+function infinitiPageController($scope, $http, $modal, $location) {
+    $scope.activePath = null;
+    $scope.$on(&#039;$routeChangeSuccess&#039;, function () {
+        $scope.$parent.activePath = &quot;#&quot; + $location.path();
+    });
+}
+
+function datapageaddControls() {
+    var timedelay = setTimeout(function () {
+        $(&quot;.datasetList&quot;).children(&quot;li:first&quot;).find(&quot;.dataDetails&quot;).click();
+    }, 1000);
+    $(&quot;#closepop&quot;).live(&quot;click&quot;, function () {
+        $(&quot;.modal-backdrop&quot;).trigger(&quot;click&quot;);
+        $(&quot;html&quot;).css(&quot;overflow&quot;, &quot;auto&quot;);
+    });
+    //hide and show by country, by sector
+    $(&quot;#byCntry&quot;).live(&quot;click&quot;, function () {
+        $(&quot;#countryDivList&quot;).show();
+        $(&quot;#sectorDivList&quot;).hide();
+    })
+    $(&quot;#bysctor&quot;).live(&quot;click&quot;, function () {
+        $(&quot;#countryDivList&quot;).hide();
+        $(&quot;#sectorDivList&quot;).show();
+    })
+    $(&quot;.sectorMenu a&quot;).live(&quot;click&quot;, function () {
+        $iid = $(this).attr(&quot;id&quot;);
+        $nxtiid = $(this).siblings(&quot;a&quot;).attr(&quot;id&quot;);
+        $(&quot;.selecType&quot;).fadeOut(&quot;fast&quot;);
+        $(&#039;#TC1&#039;).children(&quot;div&quot;).remove();
+        $(&#039;.&#039; + $nxtiid).fadeOut(&quot;fast&quot;);
+        $(&#039;.&#039; + $iid).fadeIn(&quot;slow&quot;);
+    });
+    $(&quot;.mapChoosefnt li input&quot;).live(&quot;click&quot;, function () {
+        var typeChart = $(this).val();
+        chartOpens(typeChart, 0);
+    });
+    $(&quot;.listCountry a, .bysctor a&quot;).live(&quot;click&quot;, function () {
+        $(this).parents().eq(2).fadeOut();
+        $(&quot;.selecType&quot;).fadeIn();
+        chartOpens();
+    });
+    $(&quot;.browseTab&quot;).live(&quot;click&quot;, function () {
+        $(&quot;.selecType&quot;).fadeOut(&quot;fast&quot;);
+    });
+    rearrangeData();
+}
+
+function ChartCtrl($scope, $location, $routeParams, getCountryDetails) {
+    $scope.ChartHeader = $routeParams.countryName;
+    getCountryDetails.query({
+        id: $routeParams.countryId
+    }, function (data) {
+        var yearArr = new Array();
+        var sectorArr = new Array();
+        var Series = &quot; [&quot;;
+        var Category = &quot; [&quot;;
+        for (rowIndex in data) {
+            if (!isPresent(data[rowIndex].Year, yearArr)) {
+                yearArr.push(data[rowIndex].Year);
+                Category = Category + JSON.stringify(data[rowIndex].Year) + &quot;,&quot;;
+            }
+            if (!isPresent(data[rowIndex].sector_name, sectorArr)) {
+                sectorArr.push(data[rowIndex].sector_name);
+            }
+        }
+        Category = Category.substring(0, Category.length - 1);
+        Category = Category + &quot;]&quot;;
+        Category = Category.replace(/&quot;/g, &quot;&quot;);
+        //Series
+        for (sectorIndex in sectorArr) {
+            Series = Series + &quot;{\&quot;name\&quot;:&quot; + JSON.stringify(sectorArr[sectorIndex]) + &quot;, \&quot;data\&quot;: [&quot;;
+            var data1 = &quot;&quot;;
+            for (rowIndex in data) {
+                if (JSON.stringify(data[rowIndex].sector_name) == JSON.stringify(sectorArr[sectorIndex])) {
+                    data1 = data1 + JSON.stringify(data[rowIndex].value) + &quot;,&quot;;
+                } else {
+                    rowIndex = rowIndex + sectorArr.length - 1;
+                }
+                data1 = data1.replace(/&quot;/g, &quot;&quot;);
+            }
+            Series = Series + data1;
+            Series = Series.substring(0, Series.length - 1);
+            Series = Series + &quot;]},&quot;;
+        }
+        Series = Series.substring(0, Series.length - 1);
+        Series = Series + &quot;]&quot;;
+        var options = {
+            chart: {
+                type: &#039;area&#039;
+            },
+            title: {
+                text: &#039;&#039;
+            },
+            subtitle: {
+                text: &#039;Source: Ashoka.org&#039;
+            },
+            xAxis: {
+                categories: JSON.parse(Category),
+                tickmarkPlacement: &#039;on&#039;,
+                title: {
+                    enabled: false
+                }
+            },
+            yAxis: {
+                title: {
+                    text: &#039;Billions&#039;
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value / 1000;
+                    }
+                }
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: &#039;millions&#039;
+            },
+            plotOptions: {
+                series: {
+                    stacking: &#039;normal&#039;
+                }
+            },
+            series: JSON.parse(Series)
+        };
+        var options1 = {
+            chart: {
+                type: &#039;line&#039;
+            },
+            title: {
+                text: &#039;&#039;
+            },
+            subtitle: {
+                text: &#039;Source: Ashoka.org&#039;
+            },
+            xAxis: {
+                categories: JSON.parse(Category),
+                tickmarkPlacement: &#039;on&#039;,
+                title: {
+                    enabled: false
+                }
+            },
+            yAxis: {
+                title: {
+                    text: &#039;Billions&#039;
+                },
+                labels: {
+                    formatter: function () {
+                        //console.log(this.value);
+                        return this.value / 1000;
+                    }
+                }
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: &#039;millions&#039;
+            },
+            plotOptions: {
+                area: {
+                    stacking: &#039;normal&#039;,
+                    lineColor: &#039;#666666&#039;,
+                    lineWidth: 1,
+                    marker: {
+                        lineWidth: 1,
+                        lineColor: &#039;#666666&#039;
+                    }
+                }
+            },
+            series: JSON.parse(Series)
+        };
+        var options2 = {
+            chart: {
+                type: &#039;column&#039;
+            },
+            title: {
+                text: &#039;&#039;
+            },
+            subtitle: {
+                text: &#039;Source: Ashoka.org&#039;
+            },
+            xAxis: {
+                categories: JSON.parse(Category),
+                tickmarkPlacement: &#039;on&#039;,
+                title: {
+                    enabled: false
+                }
+            },
+            yAxis: {
+                title: {
+                    text: &#039;Billions&#039;
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value / 1000;
+                    }
+                }
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: &#039;millions&#039;
+            },
+            plotOptions: {
+                area: {
+                    stacking: &#039;normal&#039;,
+                    lineColor: &#039;#666666&#039;,
+                    lineWidth: 1,
+                    marker: {
+                        lineWidth: 1,
+                        lineColor: &#039;#666666&#039;
+                    }
+                }
+            },
+            series: JSON.parse(Series)
+        };
+        var options3 = {
+            chart: {
+                type: &#039;bar&#039;
+            },
+            title: {
+                text: &#039;&#039;
+            },
+            subtitle: {
+                text: &#039;Source: Ashoka.org&#039;
+            },
+            xAxis: {
+                categories: JSON.parse(Category),
+                tickmarkPlacement: &#039;on&#039;,
+                title: {
+                    enabled: false
+                }
+            },
+            yAxis: {
+                title: {
+                    text: &#039;Billions&#039;
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value / 1000;
+                    }
+                }
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: &#039;millions&#039;
+            },
+            plotOptions: {
+                series: {
+                    stacking: &#039;normal&#039;
+                }
+            },
+            series: JSON.parse(Series)
+        };
+        jQuery(&#039;#topLeftChart&#039;).highcharts(options3);
+        jQuery(&#039;#topRightChart&#039;).highcharts(options1);
+        jQuery(&#039;#botLeftChart&#039;).highcharts(options2);
+        jQuery(&#039;#botRightChart&#039;).highcharts(options);
+    });
+}
+
+
+function sectorChartCtrl($scope, $location, $routeParams, getSectorDetails) {
+    $scope.ChartHeader = $routeParams.sectorId;
+    getSectorDetails.query({
+        id: $routeParams.sectorId
+    }, function (data) {
+        var yearArr = new Array();
+        var CountryArr = new Array();
+        var Series = &quot; [&quot;;
+        var Category = &quot; [&quot;;
+        for (rowIndex in data) {
+            if (!isPresent(data[rowIndex].Year, yearArr)) {
+                yearArr.push(data[rowIndex].Year);
+                Category = Category + JSON.stringify(data[rowIndex].Year) + &quot;,&quot;;
+            }
+            if (!isPresent(data[rowIndex].country, CountryArr)) {
+                CountryArr.push(data[rowIndex].country);
+            }
+        }
+        Category = Category.substring(0, Category.length - 1);
+        Category = Category + &quot;]&quot;;
+        Category = Category.replace(/&quot;/g, &quot;&quot;);
+        //Series
+        for (cntryIndex in CountryArr) {
+            Series = Series + &quot;{\&quot;name\&quot;:&quot; + JSON.stringify(CountryArr[cntryIndex]) + &quot;, \&quot;data\&quot;: [&quot;;
+            var data1 = &quot;&quot;;
+            for (rowIndex in data) {
+                if (JSON.stringify(data[rowIndex].country) == JSON.stringify(CountryArr[cntryIndex])) {
+                    data1 = data1 + JSON.stringify(data[rowIndex].value) + &quot;,&quot;;
+                } else {
+                    rowIndex = rowIndex + CountryArr.length - 1;
+                }
+                data1 = data1.replace(/&quot;/g, &quot;&quot;);
+            }
+            Series = Series + data1;
+            Series = Series.substring(0, Series.length - 1);
+            Series = Series + &quot;]},&quot;;
+        }
+        Series = Series.substring(0, Series.length - 1);
+        Series = Series + &quot;]&quot;;
+        var chartTitle = JSON.stringify(data[0].sector_name);
+        var options = {
+            chart: {
+                type: &#039;area&#039;
+            },
+            title: {
+                text: &#039;&#039;
+            },
+            subtitle: {
+                text: &#039;Source: Ashoka.org&#039;
+            },
+            xAxis: {
+                categories: JSON.parse(Category),
+                tickmarkPlacement: &#039;on&#039;,
+                title: {
+                    enabled: false
+                }
+            },
+            yAxis: {
+                title: {
+                    text: &#039;Billions&#039;
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value / 1000;
+                    }
+                }
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: &#039;millions&#039;
+            },
+            plotOptions: {
+                series: {
+                    stacking: &#039;normal&#039;
+                }
+            },
+            series: JSON.parse(Series)
+        };
+        var options1 = {
+            chart: {
+                type: &#039;line&#039;
+            },
+            title: {
+                text: &#039;&#039;
+            },
+            subtitle: {
+                text: &#039;Source: Ashoka.org&#039;
+            },
+            xAxis: {
+                categories: JSON.parse(Category),
+                tickmarkPlacement: &#039;on&#039;,
+                title: {
+                    enabled: false
+                }
+            },
+            yAxis: {
+                title: {
+                    text: &#039;Billions&#039;
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value / 1000;
+                    }
+                }
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: &#039;millions&#039;
+            },
+            plotOptions: {
+                area: {
+                    stacking: &#039;normal&#039;,
+                    lineColor: &#039;#666666&#039;,
+                    lineWidth: 1,
+                    marker: {
+                        lineWidth: 1,
+                        lineColor: &#039;#666666&#039;
+                    }
+                }
+            },
+            series: JSON.parse(Series)
+        };
+        var options2 = {
+            chart: {
+                type: &#039;column&#039;
+            },
+            title: {
+                text: &#039;&#039;
+            },
+            subtitle: {
+                text: &#039;Source: Ashoka.org&#039;
+            },
+            xAxis: {
+                categories: JSON.parse(Category),
+                tickmarkPlacement: &#039;on&#039;,
+                title: {
+                    enabled: false
+                }
+            },
+            yAxis: {
+                title: {
+                    text: &#039;Billions&#039;
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value / 1000;
+                    }
+                }
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: &#039;millions&#039;
+            },
+            plotOptions: {
+                area: {
+                    stacking: &#039;normal&#039;,
+                    lineColor: &#039;#666666&#039;,
+                    lineWidth: 1,
+                    marker: {
+                        lineWidth: 1,
+                        lineColor: &#039;#666666&#039;
+                    }
+                }
+            },
+            series: JSON.parse(Series)
+        };
+        var options3 = {
+            chart: {
+                type: &#039;bar&#039;
+            },
+            title: {
+                text: &#039;&#039;
+            },
+            subtitle: {
+                text: &#039;Source: Ashoka.org&#039;
+            },
+            xAxis: {
+                categories: JSON.parse(Category),
+                tickmarkPlacement: &#039;on&#039;,
+                title: {
+                    enabled: false
+                }
+            },
+            yAxis: {
+                title: {
+                    text: &#039;Billions&#039;
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value / 1000;
+                    }
+                }
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: &#039;millions&#039;
+            },
+            plotOptions: {
+                series: {
+                    stacking: &#039;normal&#039;
+                }
+            },
+            series: JSON.parse(Series)
+        };
+        jQuery(&#039;#topLeftChart&#039;).highcharts(options3);
+        jQuery(&#039;#topRightChart&#039;).highcharts(options1);
+        jQuery(&#039;#botLeftChart&#039;).highcharts(options2);
+        jQuery(&#039;#botRightChart&#039;).highcharts(options);
+    });
+}
+
+function addControls() {
+    var t = 0; // the height of the highest element (after the function runs)
+    var t_elem; // the highest element (after the function runs)
+    $(&quot;.mainContent .clumContnt&quot;).each(function () {
+        $this = $(this);
+        if ($this.innerHeight() &gt; t) {
+            t_elem = this;
+            t = $this.innerHeight();
+        }
+    });
+    var hghtAdju = setTimeout(function () {
+        if ($(document).width() &gt; 640) {
+            $(&quot;.mainContent .clumContnt&quot;).innerHeight(t);
+        } else {
+            $(&quot;#rightColum&quot;).insertAfter(&quot;.mainContent&quot;);
+        }
+        $(&quot;.bysctor&quot;).css({
+            &quot;margin-top&quot;: &quot;20px&quot;,
+            &quot;display&quot;: &quot;none&quot;
+        });
+    }, 500);
+    $(&quot;#slides&quot;).slidesjs({
+        height: 300,
+        play: {
+            auto: true,
+            interval: 3000
+        },
+        pagination: {
+            active: false
+        },
+        navigation: {
+            active: false
+        }
+    });
+}
+
+function chartOpens(typeval, mode, setHeight) {
+    if (mode == 1) {
+        $initId = $(&#039;.TC1&#039;);
+    } else {
+        $initId = $(&#039;#TC1&#039;);
+    }
+    if (!typeval) {
+        var typeChart = &#039;bar&#039;;
+    } else {
+        var typeChart = typeval;
+    }
+    if ($initId.length) {
+        $initId.highcharts({
+            chart: {
+                type: typeChart,
+                height: setHeight
+            },
+            title: {
+                text: &#039;Yearly Countries Stats&#039;
+            },
+            xAxis: {
+                categories: [&#039;2000&#039;, &#039;2003&#039;, &#039;2004&#039;, &#039;2005&#039;, &#039;2010&#039;, &#039;2011&#039;, &#039;2012&#039;]
+            },
+            yAxis: {
+                title: {
+                    text: &#039;Stat Counts&#039;
+                }
+            },
+            tooltip: {
+                enabled: true,
+                formatter: function () {
+                    return &#039;&lt;b&gt;&#039; + this.series.name + &#039;&lt;/b&gt;&lt;br/&gt;&#039; +
+                        this.x + &#039;: &#039; + this.y;
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: true
+                }
+            },
+            series: [{
+                name: &#039;India&#039;,
+                data: [7, 6, 9, 14, 18, 21, 25]
+            }, {
+                name: &#039;London&#039;,
+                data: [3, 4, 5, 8, 11, 15, 17]
+            }, {
+                name: &#039;China&#039;,
+                data: [13, 24, 25, 38, 6, 11, 7]
+            }]
+        });
+    }
+}
+
+
+function chartOpens1(classes, chartType, chartTitle, sectorValues, dataValues) {
+//alert(chartTitle);
+//alert(sectorValues);
+    
+    var jusCheckS = [];
+    var jusCheckY = [];
+    var jusCheckC = [],
+        valueArra = [],
+        addedSeries = [];
+    $.each(dataValues, function (k, v) {
+        if (jusCheckY.indexOf(dataValues[k].year) == -1) {
+            jusCheckY.push(dataValues[k].year);
+        }
+        if (jusCheckC.indexOf(dataValues[k].country) == -1) {
+            jusCheckC.push(dataValues[k].country);
+            //console.log(dataValues[k].country);
+        }
+        if (jusCheckS.indexOf(dataValues[k].sector) == -1) {
+            jusCheckS.push(dataValues[k].sector);
+        }
+        valueArra.push(dataValues[k].value);
+    })
+    /*console.log(&quot;jusCheckY : &quot;+JSON.stringify(jusCheckY));
+    console.log(&quot;jusCheckC : &quot;+JSON.stringify(jusCheckC));
+    console.log(&quot;jusCheckS : &quot;+JSON.stringify(jusCheckS));
+    console.log(&quot;sectorList is &quot;+sectorList);*/
+
+    var sector=&quot;&quot;;
+    for(index in sectorList){
+        if(sectorList[index].id==sectorValues.replace(/&quot;/g, &quot;&quot;)){
+            sector=sectorList[index].name;
+            debugger;
+        }
+    }
+
+    //console.log(&quot;sector is &quot;+sector);
+
+    var addedSeries=&quot;&quot;;
+  
+	for (countryname in jusCheckC) {
+        addedSeries = addedSeries + &quot;{\&quot;name\&quot; :\&quot;&quot; + jusCheckC[countryname] + &quot;\&quot;, \&quot;data\&quot;: [&quot;;
+        for(yearIndex in jusCheckY){
+            for(index in dataValues){
+                if(dataValues[index].sector.replace(/&quot;/g, &quot;&quot;)==sector.replace(/&quot;/g, &quot;&quot;) &amp;&amp; dataValues[index].year==jusCheckY[yearIndex] &amp;&amp; dataValues[index].country==jusCheckC[countryname]){
+                    addedSeries += dataValues[index].value+&quot;,&quot;;
+                }
+            }    
+        }
+        
+        addedSeries = addedSeries.slice(0, -1) + &quot;]},&quot;;       
+    }
+    vaaal = &quot;[&quot; + addedSeries.slice(0, -1) + &quot;]&quot;;
+    //console.log(&quot;vaal is :&quot;+vaaal);
+	$initId = $(&#039;.&#039; + classes);
+    var typeChart = chartType;
+    if ($initId.length) {
+        $initId.highcharts({
+            chart: {
+                type: typeChart
+            },
+            title: {
+                text: chartTitle
+            },
+            xAxis: {
+                categories: jusCheckY
+            },
+            yAxis: {
+                title: {
+                    text: &#039;Stat Counts&#039;
+                }
+            },
+            tooltip: {
+                enabled: true,
+                formatter: function () {
+                    return &#039;&lt;b&gt;&#039; + this.series.name + &#039;&lt;/b&gt;&lt;br/&gt;&#039; +
+                        this.x + &#039;: &#039; + this.y;
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: true
+                }
+            },
+            series: JSON.parse(vaaal)
+        });
+    }
+}
+
+function isPresent(obj, Arr) {
+    for (i in Arr) {
+        if (obj == Arr[i])
+            return true;
+    }
+    return false;
+};
+
+function rearrangeData() {
+    //console.log(&quot;called rearrangeData&quot;);
+    if ($.browser.msie) {
+        setTimeout(function () {
+            $(&quot;#sideDiv .btn:eq(0)&quot;).css(&quot;top&quot;, &quot;10px&quot;);
+            $(&quot;#sideDiv .btn:eq(1)&quot;).css(&quot;top&quot;, &quot;45px&quot;);
+            $(&quot;#sideDiv .btn:eq(2)&quot;).css(&quot;top&quot;, &quot;85px&quot;);
+        }, 100)
+    }
+
+}
+
+
+var tableToExcel = (function () {
+    var uri = &#039;data:application/vnd.ms-excel;base64,&#039;,
+        template = &#039;&lt;html xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot; xmlns:x=&quot;urn:schemas-microsoft-com:office:excel&quot; xmlns=&quot;http://www.w3.org/TR/REC-html40&quot;&gt;&lt;head&gt;&lt;!--[if gte mso 9]&gt;&lt;xml&gt;&lt;x:ExcelWorkbook&gt;&lt;x:ExcelWorksheets&gt;&lt;x:ExcelWorksheet&gt;&lt;x:Name&gt;{worksheet}&lt;/x:Name&gt;&lt;x:WorksheetOptions&gt;&lt;x:DisplayGridlines/&gt;&lt;/x:WorksheetOptions&gt;&lt;/x:ExcelWorksheet&gt;&lt;/x:ExcelWorksheets&gt;&lt;/x:ExcelWorkbook&gt;&lt;/xml&gt;&lt;![endif]--&gt;&lt;/head&gt;&lt;body&gt;&lt;table&gt;{table}&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;&#039;,
+        base64 = function (s) {
+            return window.btoa(unescape(encodeURIComponent(s)))
+        }, format = function (s, c) {
+            return s.replace(/{(\w+)}/g, function (m, p) {
+                return c[p];
+            })
+        }
+    return function (table, name, filename) {
+        if (!table.nodeType) table = document.getElementById(&#039;dataPageTable&#039;);
+        //console.log(table);
+        var ctx = {
+            worksheet: name || &#039;Worksheet&#039;,
+            table: table.innerHTML
+        }
+
+        document.getElementById(&quot;dlink&quot;).href = uri + base64(format(template, ctx));
+        document.getElementById(&quot;dlink&quot;).download = filename;
+        document.getElementById(&quot;dlink&quot;).click();
+
+    }
+})()
+
+
+
+$(&quot;#sectorSelectBox&quot;).live( &quot;change&quot;, sectorBoxChange);
+$(&quot;#chartType&quot;).live( &quot;change&quot;, chartTypeChange);
+
+
+
+function sectorBoxChange(){
+    var typeOfChart=$(&quot;input:radio[name =&#039;chartType&#039;]:checked&quot;).val();
+	for( rowindex in sectorList){
+	if(JSON.stringify(sectorList[rowindex].name).replace(/&quot;/g, &quot;&quot;)==$(&quot;#sectorSelectBox option:selected&quot;).text()){
+		var name=JSON.stringify(sectorList[rowindex].name).replace(/&quot;/g, &quot;&quot;);
+		chartOpens1(&quot;topChart&quot;, typeOfChart, name+&quot; Stats&quot;, JSON.stringify(sectorList[rowindex].id), surveyDataGlobal);
+		break;
+	}
+}
+}
+
+
+function chartTypeChange(){
+    var typeOfChart=$(&quot;input:radio[name =&#039;chartType&#039;]:checked&quot;).val();
+    for( rowindex in sectorList){
+    if(JSON.stringify(sectorList[rowindex].name).replace(/&quot;/g, &quot;&quot;)==$(&quot;#sectorSelectBox option:selected&quot;).text()){
+        var name=JSON.stringify(sectorList[rowindex].name).replace(/&quot;/g, &quot;&quot;);
+        chartOpens1(&quot;topChart&quot;, typeOfChart, name+&quot; Stats&quot;, JSON.stringify(sectorList[rowindex].id), surveyDataGlobal);
+        break;
+    }
+}
+
+    document.cookie = &quot;homeChartType&quot; + &quot;=&quot; + typeOfChart;
+}
+
+
+function checkCookie(){
+     //checking cookie
+                    var c_name = &quot;homeChartType&quot;
+                    var c_value = document.cookie;
+                    var c_start = c_value.indexOf(&quot; &quot; + c_name + &quot;=&quot;);
+                    if (c_start == -1) {
+                        c_start = c_value.indexOf(c_name + &quot;=&quot;);
+                    }
+                    if (c_start == -1) {
+                        c_value = null;
+                    } else {
+                        c_start = c_value.indexOf(&quot;=&quot;, c_start) + 1;
+                        var c_end = c_value.indexOf(&quot;;&quot;, c_start);
+                        if (c_end == -1) {
+                            c_end = c_value.length;
+                        }
+                        c_value = unescape(c_value.substring(c_start, c_end));
+                    }
+                    if (c_value) {
+                        valflag = c_value;
+                    }
+                    else{
+                        valflag = $(&quot;input:radio[name =&#039;chartType&#039;]:checked&quot;).val();
+                    }
+                    document.cookie = &quot;homeChartType&quot; + &quot;=&quot; + valflag;
+                    return valflag;
+
+                //cookie checking done
+}</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

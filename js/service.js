@@ -52,12 +52,9 @@ return $resource('/getCountryDescription', {}, {
             isArray: true
         }
     });
-})
-.factory('getSurveyDataDrag', function($resource){  
- return $resource('/getSurveyData/', {flag: '3'}, { 
+}).factory('getSurveyDataActions', function($resource){  
+ return $resource('/getSurveyDataActions', {}, {
     query: {method:'GET', params:{}, isArray:true}
   });
-})
-
-;
+});
 

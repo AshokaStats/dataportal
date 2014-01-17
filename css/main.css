@@ -121,6 +121,19 @@ input[type="radio"]{
 
 .botChart{
 	margin-top: 20px;
+	text-align: center;
+	color: #666666;
+    cursor: default;
+    font-family: "Lucida Grande","Lucida Sans Unicode",Verdana,Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    line-height: 14px;
+}
+
+.botChart select, .midDiv{
+	color: #666666;
+    font-family: "Lucida Grande","Lucida Sans Unicode",Verdana,Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    line-height: 14px;
 }
 
 
@@ -182,6 +195,10 @@ input[type="radio"]{
 
 .mainContentLogos h4{
 	color: #333333;
+}
+
+#sectorSelectBox{
+	width: 100%;
 }
 
 /*About Page*/
@@ -315,10 +332,32 @@ input[type="radio"]{
 	background-color: #f2f2f2;	
 }
 
-.dsetContainer ul, .bysctor ul {
+.dsetContainer ul, .bysctor ul , .listCountry ul{
 	margin: 0px;
+	list-style-type: none;
 }
 
+.bysctor{
+	display: none;
+}
+
+.countryListBrowse ul li{
+	padding: 2px;
+	font-size: 13px;
+}
+
+.srchQuery{
+	width: 30%;
+	border-radius: 3px !important;
+	padding-left: 3%;
+	padding-right: 3%;
+	text-align: center;
+ }
+ 
+ .pd20{
+	margin: 15px 0px !important;
+ }
+ 
 .dsetContainer ul li{
 	list-style: none;
 	margin: 20px 0;	
@@ -414,10 +453,7 @@ input[type="radio"]{
 
 
 #searchBox{
-	width: 87%;
-	padding-left: 3%;
-	padding-right: 3%;
-	text-align: center;
+	width: 87% !important;
 }
 
 
@@ -541,6 +577,10 @@ margin-top: 10px;
 	padding: 10px;
 }
 
+
+
+
+
 /* Screens ----------- */
 
 @media only screen and (max-width : 641PX){
@@ -593,13 +633,13 @@ margin-top: 10px;
 .mainContentLogos{
     float: none;
     margin: 0px 10px;
-    width: 100% ;
+    width: 96% ;
 }
 
 #rightColum{
     float:none;
-    width: 98% ;
-    margin: 0 10px;
+    width: 97% ;
+    margin: 0 2px;
 }
 
 .footer {
@@ -609,6 +649,10 @@ margin-top: 10px;
 .leftsideinfi, .rghtsideinfi{
 	float: none;
 	width: 100%;
+}
+
+.leftsideinfi{
+	padding: 0px;
 }
 
 .leftDataColmn{
@@ -778,4 +822,8 @@ table.studDetails tr:hover td {
     fill: #274B6D;
     font-family: "Lucida Grande","Lucida Sans Unicode",Verdana,Arial,Helvetica,sans-serif;
     font-size: 12px;	
+}
+
+.midDiv{
+    text-align: center;
 }

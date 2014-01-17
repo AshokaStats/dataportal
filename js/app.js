@@ -20,7 +20,7 @@ angular.module('AshokaApp', ['ui.bootstrap', 'dataSetDataServices', 'ngDragDrop'
         }).
 		when('/countries/:countryId/:countryName', {
 		templateUrl: 'partials/detail.html',
-        controller: 'ChartCtrl'
+        controller: 'countryChartCtrl'
 		}).
         when('/sectors/:sectorId', {
         templateUrl: 'partials/detail.html',
